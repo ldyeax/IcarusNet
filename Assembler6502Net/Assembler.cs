@@ -16,12 +16,11 @@ namespace Assembler6502Net
             AsWritten
         }
         public OperandLengthOption OperandLength = OperandLengthOption.AsWritten;
+        public bool ReallocateIfOutOfBounds = false;
     }
 
     public class Assembler
     {
-
-
         static Dictionary<OpCode, Dictionary<AddressingMethod, byte>> OpcodeTable = new Dictionary<OpCode, Dictionary<AddressingMethod, byte>>();
 
         static OpCode[] OpCodes = (OpCode[])Enum.GetValues(typeof(OpCode));
@@ -208,11 +207,12 @@ namespace Assembler6502Net
         }
 
         public AssemblerConfig Config = new AssemblerConfig() { OperandLength = AssemblerConfig.OperandLengthOption.AsWritten };
+        public byte[] Bytes;
 
-        public Assembler() { }
-        public Assembler(AssemblerConfig config)
+        public Assembler(ref byte[] bytes, AssemblerConfig config)
         {
             this.Config = config;
+            this.Bytes = bytes;
         }
 
         public SortedDictionary<string, ushort> Labels = new SortedDictionary<string, ushort>();
@@ -242,15 +242,14 @@ namespace Assembler6502Net
             return b;
         }
 
-
-        public byte[] Assemble(string text)
+        public void Assemble(string text)
         {
             string[] strlines = text.ToUpper().Split('\n');
-            List<byte> ret = new List<byte>();
 
             Line[] lines = new Line[strlines.Length];
             
             ushort pc = 0;
+            ushort highestPC = 0;
 
             //First pass resolves variables and sets labels 
             for (int i = 0; i < lines.Length; ++i)
@@ -278,7 +277,7 @@ namespace Assembler6502Net
                             }
                             catch (FormatException)
                             {
-                                throw new SyntaxErrorException(i);
+                                throw new SyntaxErrorException(i, "Invalid address literal");
                             }
                         }
                         else
@@ -294,15 +293,37 @@ namespace Assembler6502Net
                         {
                             pc++;
                             pc += AddressingMethodLength[line.AddressingMethod.Value];
+
+                            if (pc > highestPC)
+                                highestPC = pc;
+
+                            if (pc > Bytes.Length)
+                            {
+                                if (!Config.ReallocateIfOutOfBounds)
+                                    throw new SyntaxErrorException(i, "Out of space on line");
+                            }
                         }
                     }
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw new SyntaxErrorException(i);
+                    if (ex is SyntaxErrorException)
+                    {
+                        var s = (SyntaxErrorException)ex;
+                        s.Line = i;
+                        throw s;
+                    }
+                    else
+                        throw new SyntaxErrorException(i, ex);
                 }
 
+            }
+
+            if (highestPC > Bytes.Length)
+            {
+                byte[] reallocated = new byte[highestPC];
+                Array.Copy(Bytes, reallocated, Bytes.Length);
             }
 
             //Second pass resolves labels and generates machine code
@@ -317,7 +338,7 @@ namespace Assembler6502Net
                     {
                         line.DetermineLabelsAndSecondPassAddressingMethod(this, i);
 
-                        ret.Add(OpcodeTable[line.OpCode.Value][line.AddressingMethod.Value]);
+                        this.Bytes[pc] = OpcodeTable[line.OpCode.Value][line.AddressingMethod.Value];
 
                         switch (AddressingMethodLength[line.AddressingMethod.Value])
                         {
@@ -325,29 +346,34 @@ namespace Assembler6502Net
                                 break;
                             case 1:
                                 {
-                                    ret.Add((byte)line.RValue.ComputedValue.Result);
+                                    this.Bytes[pc + 1] = (byte)line.RValue.ComputedValue.Result;
                                 }
                                 break;
                             case 2:
                                 {
                                     var le = ushortToLE(line.RValue.ComputedValue.Result);
-                                    ret.Add(le[0]);
-                                    ret.Add(le[1]);
+                                    this.Bytes[pc + 1] = le[0];
+                                    this.Bytes[pc + 2] = le[1];
                                 }
                                 break;
                         }
-
-
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw new SyntaxErrorException(i);
+                    if (ex is SyntaxErrorException)
+                    {
+                        var s = (SyntaxErrorException)ex;
+                        s.Line = i;
+                        throw s;
+                    }
+                    else
+                        throw new SyntaxErrorException(i, ex);
                 }
 
             }
 
-            return ret.ToArray();
+            return;
         }
 
         class RValue
@@ -437,7 +463,7 @@ namespace Assembler6502Net
                 if (nval < 0)
                 {
                     if (nval < sbyte.MinValue)
-                        throw new SyntaxErrorException();
+                        throw new SyntaxErrorException("Negative value out of range for byte");
                     nval *= -1;
                     nval = ((byte)nval) ^ byte.MaxValue;
                     nval++;
@@ -462,7 +488,7 @@ namespace Assembler6502Net
                 if (nval < 0)
                 {
                     if (nval < sbyte.MinValue)
-                        throw new SyntaxErrorException();
+                        throw new SyntaxErrorException("Negative value out of range for byte");
                     nval *= -1;
                     nval = ((byte)nval) ^ byte.MaxValue;
                     
@@ -622,21 +648,21 @@ namespace Assembler6502Net
                 {
                     string[] byequals = (from str in line.Split('=') select formatLine(str)).ToArray();
                     if (byequals.Length != 2)
-                        throw new SyntaxErrorException(lineno);
+                        throw new SyntaxErrorException(lineno, "Invalid variable syntax");
                     string lvalue = byequals.First();
                     string rvalue = byequals.Last();
                     if (lvalue.Length == 0)
-                        throw new SyntaxErrorException(lineno);
+                        throw new SyntaxErrorException(lineno, "Empty lvalue of variable assignment");
 
 
                     if (lvalue != "*")
                     {
                         if (!alphabet.Contains(lvalue[0]))
-                            throw new SyntaxErrorException(lineno);
+                            throw new SyntaxErrorException(lineno, "Lvalue must be * or alphanumeric beginning with nonnumeric");
                         foreach (char c in lvalue)
                         {
                             if (!alphabet.Contains(c) && !numerals.Contains(c))
-                                throw new SyntaxErrorException(lineno);
+                                throw new SyntaxErrorException(lineno, "Lvalue must be * or alphanumeric beginning with nonnumeric");
                         }
                     }
 
@@ -645,7 +671,7 @@ namespace Assembler6502Net
                     return;
                 }
                 if (line.Length < 3)
-                    throw new SyntaxErrorException(lineno);
+                    throw new SyntaxErrorException(lineno, "Line length less than 3");
 
                 string opcode = line.Substring(0, 3);
                 try
@@ -654,7 +680,7 @@ namespace Assembler6502Net
                 }
                 catch (ArgumentException)
                 {
-                    throw new SyntaxErrorException(lineno);
+                    throw new SyntaxErrorException(lineno, "Illegal opcode");
                 }
 
                 List<string> byspace = line.Split(' ').ToList();
@@ -710,7 +736,7 @@ namespace Assembler6502Net
                     ).ToList();
 
                 if (choices.Count == 0)
-                    throw new SyntaxErrorException();
+                    throw new SyntaxErrorException("Illegal addressing method for opcode");
 
                 if (choices.Count == 1)
                 {
@@ -727,7 +753,7 @@ namespace Assembler6502Net
                 choices.Remove(Assembler6502Net.AddressingMethod.immediate);
 
                 if (choices.Count == 0)
-                    throw new SyntaxErrorException();
+                    throw new SyntaxErrorException("Illegal addressing method for opcode");
 
                 if (choices.Count == 1)
                 {
@@ -778,7 +804,7 @@ namespace Assembler6502Net
                         return;
                 }
 
-                throw new SyntaxErrorException();
+                throw new SyntaxErrorException("Unable to determine addressing method");
             }
 
             /// <summary>
@@ -818,12 +844,17 @@ namespace Assembler6502Net
     {
         public int Line = 0;
         public SyntaxErrorException() : base() { }
-        public SyntaxErrorException(string s) : base(s) { }
-        public SyntaxErrorException(int line)
-            : base("Syntax error at line " + line)
+        public SyntaxErrorException(string s, Exception ex = null) : base(s, ex) { }
+        public SyntaxErrorException(int line, Exception ex = null) : base("Unspecified", ex)
         {
             Line = line;
         }
+        public SyntaxErrorException(int line, string str, Exception ex = null)
+            : base(str, ex)
+        {
+            Line = line;
+        }
+
     }
 
     enum OpCode

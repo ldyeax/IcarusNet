@@ -25,24 +25,58 @@ namespace IcarusNet
                 listBox1.Items.Add(s);
             }
             listBox1.SelectedIndex = 0;
+            bytes = new byte[FileSize];
         }
+
+        ushort FileSize
+        {
+            get
+            {
+                try
+                {
+                    return Convert.ToUInt16(txtFileSize.Text);
+                }
+                catch (Exception)
+                {
+                    txtFileSize.Text = "1024";
+                    return 1024;
+                }
+            }
+            set
+            {
+                txtFileSize.Text = value.ToString();
+            }
+        }
+
+        byte[] bytes;
+
+        Assembler myAssembler;
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (FileSize > bytes.Length)
+            {
+                var newbytes = new byte[FileSize];
+                Array.Copy(bytes, newbytes, bytes.Length);
+                bytes = newbytes;
+            }
+
             try
             {
+                myAssembler = new Assembler(
+                    ref bytes,
+                    new AssemblerConfig()
+                    {
+                        OperandLength =
+                            (AssemblerConfig.OperandLengthOption)Enum.Parse(
+                                typeof(AssemblerConfig.OperandLengthOption),
+                                listBox1.SelectedItem.ToString()
+                            ),
+                        ReallocateIfOutOfBounds = radioButton1.Checked
+                    }
+                );
 
-
-                Assembler a = new Assembler(new AssemblerConfig()
-                {
-                    OperandLength =
-                        (AssemblerConfig.OperandLengthOption)Enum.Parse(
-                            typeof(AssemblerConfig.OperandLengthOption),
-                            listBox1.SelectedItem.ToString()
-                        )
-                });
-
-                var bytes = a.Assemble(textBox1.Text);
+                myAssembler.Assemble(txtInput.Text);
 
                 System.IO.File.WriteAllBytes("output.bin", bytes);
 
@@ -51,9 +85,21 @@ namespace IcarusNet
             }
             catch (Assembler6502Net.SyntaxErrorException ex)
             {
-                MessageBox.Show("Error on line " + (ex.Line + 1));
+                lblErrorOutput.Text = "Error on line " + (ex.Line + 1) + ":\n" + ex.Message + "\n";
+                if (ex.InnerException != null)
+                    lblErrorOutput.Text += ex.InnerException.Message;
+                string line = txtInput.Text.Split('\n')[ex.Line];
+                //int start = txtInput.Text.IndexOf(line);
+                txtInput.SelectionStart = txtInput.GetFirstCharIndexFromLine(ex.Line);
+                txtInput.SelectionLength = line.Length;
+                txtInput.HideSelection = false;
             }
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            bytes = new byte[FileSize];
         }
     }
 }
