@@ -76,10 +76,10 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(497, 373);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(405, 13);
+            this.label1.Size = new System.Drawing.Size(405, 26);
             this.label1.TabIndex = 5;
             this.label1.Text = "Alpha version of 6502  IDE. Assembles correctly as far as I know. ldyeax@gmail.co" +
-    "m";
+    "m\r\nOutput dumped to output.bin";
             // 
             // Form1
             // 

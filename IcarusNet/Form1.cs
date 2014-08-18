@@ -44,6 +44,8 @@ namespace IcarusNet
 
                 var bytes = a.Assemble(textBox1.Text);
 
+                System.IO.File.WriteAllBytes("output.bin", bytes);
+
                 Be.Windows.Forms.DynamicByteProvider bp = new Be.Windows.Forms.DynamicByteProvider(bytes);
                 hexBox1.ByteProvider = bp;
             }
