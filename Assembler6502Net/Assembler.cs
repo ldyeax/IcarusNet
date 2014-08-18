@@ -833,8 +833,6 @@ namespace Assembler6502Net
                 if (this.AddressingMethod != null)
                     //The label replacement has been finished by now, and jmps and branches are finished
                     return;
-
-
             }
         }
     }
