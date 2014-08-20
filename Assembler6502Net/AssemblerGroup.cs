@@ -59,6 +59,11 @@ namespace Assembler6502Net
             {
                 assembler.Assemble();
             }
+
+            OnAssembleFinished();
         }
+
+        public Action OnAssembleFinished = () => { };
+
     }
 }
