@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembler.cs" />
+    <Compile Include="AssemblerGroup.cs" />
+    <Compile Include="Assembly.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -47,6 +49,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
