@@ -1,4 +1,4 @@
-﻿namespace IcarusNet
+﻿namespace IcarusNetFrontend_Winforms
 {
     partial class AssemblyFileForm
     {
@@ -45,8 +45,10 @@
             this.txtInputAssembly.Name = "txtInputAssembly";
             this.txtInputAssembly.Size = new System.Drawing.Size(744, 443);
             this.txtInputAssembly.TabIndex = 9;
-            this.txtInputAssembly.Text = "place = $100\r\n* = $20\r\nyes:\r\nLDA #$04\r\nBNE no\r\nTAY\r\nTAX\r\nINX\r\nSTA place\r\njmp yes\r" +
-    "\nno:";
+            this.txtInputAssembly.TextChanged += new System.EventHandler(this.txtInputAssembly_TextChanged);
+            this.txtInputAssembly.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInputAssembly_KeyPress);
+            this.txtInputAssembly.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtInputAssembly_KeyUp);
+            this.txtInputAssembly.Leave += new System.EventHandler(this.txtInputAssembly_Leave);
             // 
             // button1
             // 
@@ -89,6 +91,8 @@
             this.ShowInTaskbar = false;
             this.Text = "AssemblyFileForm";
             this.Load += new System.EventHandler(this.AssemblyFileForm_Load);
+            this.ResizeEnd += new System.EventHandler(this.AssemblyFileForm_ResizeEnd);
+            this.Move += new System.EventHandler(this.AssemblyFileForm_Move);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -25,7 +25,24 @@ namespace Assembler6502Net
 
         public AssemblerConfig Config = new AssemblerConfig() { OperandLength = AssemblerConfig.OperandLengthOption.AsWritten };
         public byte[] Bytes;
-        public string Text = "";
+        string text = "";
+        public string Text
+        {
+            get
+            {
+                return text;
+            }
+            set
+            {
+                Labels = new Dictionary<string, ushort>();
+                Variables = new SortedDictionary<string, string>();
+                currentReadingLine = 0;
+                didFirstPass = false;
+                lines = null;
+
+                text = value;
+            }
+        }
 
         public Assembler(ref byte[] bytes, AssemblerConfig config)
         {
@@ -132,22 +149,25 @@ namespace Assembler6502Net
 
                     if (pc > highestPC)
                         highestPC = pc;
-
-                    if (pc > Bytes.Length)
-                    {
-                        if (!Config.ReallocateIfOutOfBounds)
-                            throw new SyntaxErrorException(currentReadingLine, "Out of space on line");
-                    }
+                    if (Bytes != null)
+                        if (pc > Bytes.Length)
+                        {
+                            if (!Config.ReallocateIfOutOfBounds)
+                                throw new SyntaxErrorException(currentReadingLine, "Out of space on line");
+                        }
                 }
 
             }
 
-            if (highestPC > Bytes.Length)
-            {
-                byte[] reallocated = new byte[highestPC];
-                Array.Copy(Bytes, reallocated, Bytes.Length);
-            }
+            if (Bytes != null)
+                if (highestPC > Bytes.Length)
+                {
+                    byte[] reallocated = new byte[highestPC];
+                    Array.Copy(Bytes, reallocated, Bytes.Length);
+                }
 
+
+            AssemblerGroup.AddLabels(Labels);
             didFirstPass = true;
         }
 
@@ -227,6 +247,7 @@ namespace Assembler6502Net
     }
 
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
     public class SyntaxErrorException : Exception
     {
         public int Line = 0;

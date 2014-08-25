@@ -7,3 +7,8 @@ Assembler6502Net/opcodes.txt
 IcarusNet/bin/
 IcarusNet/obj/
 IcarusNet/opcodes.txt
+IcarusNetProject/bin/
+IcarusNetProject/obj/
+IcarusNetFrontend_WinForms/obj/
+IcarusNetFrontend_WinForms/bin/Release/IcarusNet.vshost.exe.config
+IcarusNetFrontend_WinForms/bin/

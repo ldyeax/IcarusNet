@@ -8,9 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using Assembler6502Net;
 
-namespace IcarusNet
+namespace IcarusNetFrontend_Winforms
 {
-    public partial class HexEditorForm : Form, IDEControl
+    public partial class HexEditorForm : Form
     {
         public HexEditorForm()
         {
@@ -25,18 +25,5 @@ namespace IcarusNet
 
         }
 
-        #region IDEControl
-        public void Process(AssemblerGroup group)
-        {
-            group.OnAssembleFinished += () =>
-            {
-                HexEditor.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(group.Bytes);
-            };
-        }
-        public int GetOrder()
-        {
-            return int.MaxValue;
-        }
-        #endregion
     }
 }

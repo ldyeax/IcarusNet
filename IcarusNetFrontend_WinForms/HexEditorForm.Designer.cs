@@ -1,4 +1,4 @@
-﻿namespace IcarusNet
+﻿namespace IcarusNetFrontend_Winforms
 {
     partial class HexEditorForm
     {

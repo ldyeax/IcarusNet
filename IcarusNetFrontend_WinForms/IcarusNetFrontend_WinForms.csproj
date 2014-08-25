@@ -7,8 +7,8 @@
     <ProjectGuid>{6469FC9C-9F52-44EC-9A50-F0C1B82503C0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IcarusNet</RootNamespace>
-    <AssemblyName>IcarusNet</AssemblyName>
+    <RootNamespace>IcarusNetFrontend_Winforms</RootNamespace>
+    <AssemblyName>IcarusNetFrontend_WinForms</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -35,6 +35,11 @@
   <ItemGroup>
     <Reference Include="Be.Windows.Forms.HexBox">
       <HintPath>ref\Be.Windows.Forms.HexBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ref\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -65,12 +70,19 @@
     <Compile Include="HexEditorForm.Designer.cs">
       <DependentUpon>HexEditorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="IDEControl.cs" />
+    <Compile Include="IcarusNetComponentAttribute.cs" />
+    <Compile Include="IProjectComponentForm.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewProjectForm.Designer.cs">
+      <DependentUpon>NewProjectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +97,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewProjectForm.resx">
+      <DependentUpon>NewProjectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -111,6 +126,10 @@
     <ProjectReference Include="..\Assembler6502Net\Assembler6502Net.csproj">
       <Project>{82fae6ae-bfc5-4d96-83ee-e271b99bff8e}</Project>
       <Name>Assembler6502Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IcarusNetProject\IcarusNetProject.csproj">
+      <Project>{9309d72d-809b-468f-96e9-dd58b01d3bf3}</Project>
+      <Name>IcarusNetProject</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -30,38 +30,58 @@ namespace Assembler6502Net
         public Dictionary<string, ushort> Labels = new Dictionary<string, ushort>();
         public Dictionary<string, string> Variables = new Dictionary<string, string>();
 
-        public void Assemble()
+        List<string> bannedLabels = new List<string>();
+
+        public void AddLabels(Dictionary<string, ushort> newLabels)
         {
-            List<string> bannedLabels = new List<string>();
-            //First pass
-            foreach (Assembler assembler in assemblers)
+            foreach (var pair in newLabels)
             {
-                assembler.Bytes = this.Bytes;
-                assembler.FirstPass();
-                foreach (var pair in assembler.Labels)
+                if (bannedLabels.Contains(pair.Key))
+                    continue;
+
+                if (newLabels.Keys.Contains(pair.Key))
                 {
-                    if (bannedLabels.Contains(pair.Key))
-                        continue;
-
-                    if (Labels.Keys.Contains(pair.Key))
-                    {
-                        bannedLabels.Add(pair.Key);
-                        Labels.Remove(pair.Key);
-                        continue;
-                    }
-
-                    Labels.Add(pair.Key, pair.Value);
+                    bannedLabels.Add(pair.Key);
+                    newLabels.Remove(pair.Key);
+                    continue;
                 }
-            }
 
-            //Second pass
-            foreach (Assembler assembler in assemblers)
-            {
-                assembler.Assemble();
+                Labels.Add(pair.Key, pair.Value);
             }
-
-            OnAssembleFinished();
         }
+
+        //public void Assemble()
+        //{
+        //    List<string> bannedLabels = new List<string>();
+        //    //First pass
+        //    foreach (Assembler assembler in assemblers)
+        //    {
+        //        assembler.Bytes = this.Bytes;
+        //        assembler.FirstPass();
+        //        foreach (var pair in assembler.Labels)
+        //        {
+        //            if (bannedLabels.Contains(pair.Key))
+        //                continue;
+
+        //            if (Labels.Keys.Contains(pair.Key))
+        //            {
+        //                bannedLabels.Add(pair.Key);
+        //                Labels.Remove(pair.Key);
+        //                continue;
+        //            }
+
+        //            Labels.Add(pair.Key, pair.Value);
+        //        }
+        //    }
+
+        //    //Second pass
+        //    foreach (Assembler assembler in assemblers)
+        //    {
+        //        assembler.Assemble();
+        //    }
+
+        //    OnAssembleFinished();
+        //}
 
         public Action OnAssembleFinished = () => { };
 

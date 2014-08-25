@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Assembler6502Net;
 
-namespace IcarusNet
+namespace IcarusNetFrontend_Winforms
 {
     public partial class AssemblerConfigForm : Form
     {
