@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Assembler6502Net
 {
-    internal class Line
+    public class Line
     {
         static string formatLine(string line)
         {
@@ -24,6 +24,8 @@ namespace Assembler6502Net
         public RValue RValue = null;
         public KeyValuePair<string, string>? VariableAssignment = null;
         public ushort PC;
+
+        public List<byte> ComputedBytes = new List<byte>();
 
         public Line() { }
 
@@ -238,6 +240,29 @@ namespace Assembler6502Net
             return false;
         }
 
+        void finishResolveLabelsAndAssembleSecondPass()
+        {
+            ComputedBytes = new List<byte>();
+            ComputedBytes.Add(Assembly.OpcodeTable[OpCode.Value][AddressingMethod.Value]);
+
+            switch (Assembly.AddressingMethodLength[AddressingMethod.Value])
+            {
+                case 0:
+                    break;
+                case 1:
+                    {
+                        ComputedBytes.Add((byte)RValue.ComputedValue.Result);
+                    }
+                    break;
+                case 2:
+                    {
+                        foreach (byte b in Assembly.UshortToLE(RValue.ComputedValue.Result))
+                            ComputedBytes.Add(b);                  
+                    }
+                    break;
+            }
+        }
+
         /// <summary>
         /// called on second pass once labels have already been initialized
         /// addressing method has already been assigned to
@@ -246,10 +271,14 @@ namespace Assembler6502Net
         public void ResolveLabelsAndAssembleSecondPass(Assembler assembler, int lineno)
         {
             if (this.AddressingMethod.Value == Assembly.AddressingMethod.implied)
+            {
                 //no work to do
+                finishResolveLabelsAndAssembleSecondPass();
                 return;
+            }
+                
 
-            if (!resolveLabels(assembler.Labels))
+            if (!resolveLabels(assembler.Labels) && assembler.AssemblerGroup != null)
                 resolveLabels(assembler.AssemblerGroup.Labels);
             
 
@@ -258,8 +287,11 @@ namespace Assembler6502Net
             //Label searching and value setting done - now only concerned with determining the addressing method
 
             if (this.AddressingMethod != null)
+            {
                 //The label replacement has been finished by now, and jmps and branches are finished
+                finishResolveLabelsAndAssembleSecondPass();
                 return;
+            }
 
             throw new SyntaxErrorException(lineno, "End of second pass reached without finding an addressing method");
         }

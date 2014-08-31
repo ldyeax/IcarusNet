@@ -56,7 +56,7 @@
             this.txtCreateUnder.Name = "txtCreateUnder";
             this.txtCreateUnder.Size = new System.Drawing.Size(342, 20);
             this.txtCreateUnder.TabIndex = 1;
-            this.txtCreateUnder.Text = "c:\\myprojectsfolder";
+            this.txtCreateUnder.Text = "c:\\icarproj";
             // 
             // label1
             // 
@@ -82,7 +82,7 @@
             this.txtProjectName.Name = "txtProjectName";
             this.txtProjectName.Size = new System.Drawing.Size(342, 20);
             this.txtProjectName.TabIndex = 4;
-            this.txtProjectName.Text = "ridable_monsters_mod";
+            this.txtProjectName.Text = "project";
             // 
             // label3
             // 
@@ -99,7 +99,7 @@
             this.txtInputFile.Name = "txtInputFile";
             this.txtInputFile.Size = new System.Drawing.Size(342, 20);
             this.txtInputFile.TabIndex = 6;
-            this.txtInputFile.Text = "c:\\myroms\\hello.bin";
+            this.txtInputFile.Text = "c:\\icarproj\\cleanrom.bin";
             // 
             // txtOutputFileName
             // 
@@ -107,7 +107,7 @@
             this.txtOutputFileName.Name = "txtOutputFileName";
             this.txtOutputFileName.Size = new System.Drawing.Size(342, 20);
             this.txtOutputFileName.TabIndex = 8;
-            this.txtOutputFileName.Text = "ridable_monsters.bin";
+            this.txtOutputFileName.Text = "modifiedrom.bin";
             // 
             // label4
             // 

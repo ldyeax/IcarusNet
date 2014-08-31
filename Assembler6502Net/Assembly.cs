@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Assembler6502Net
 {
-    internal static class Assembly
+    public static class Assembly
     {
         public static Dictionary<OpCode, Dictionary<AddressingMethod, byte>> OpcodeTable = new Dictionary<OpCode, Dictionary<AddressingMethod, byte>>();
 
@@ -14,6 +14,14 @@ namespace Assembler6502Net
         public static OpCode GetOpCode(string str)
         {
             return (OpCode)Enum.Parse(typeof(OpCode), str.ToUpper());
+        }
+
+        public static byte[] UshortToLE(ushort data)
+        {
+            byte[] b = new byte[2];
+            b[0] = (byte)data;
+            b[1] = (byte)(((uint)data >> 8) & 0xFF);
+            return b;
         }
 
         public static Dictionary<AddressingMethod, ushort> AddressingMethodLength = new Dictionary<AddressingMethod, ushort>();
@@ -266,5 +274,8 @@ namespace Assembler6502Net
             zeropageX,
             zeropageY
         }
+
+
+
     }
 }

@@ -8,5 +8,6 @@ namespace IcarusNetFrontend_Winforms
     public interface IProjectComponentForm
     {
         void Initialize(IcarusNetProject.Components.Component component);
+        IcarusNetProject.Components.Component GetComponent();
     }
 }

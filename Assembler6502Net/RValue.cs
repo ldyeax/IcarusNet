@@ -5,15 +5,19 @@ using System.Text;
 
 namespace Assembler6502Net
 {
-    internal class RValue
+    public class RValue
     {
         public class ComputedValueResult
         {
+            /// <summary>
+            /// Only the part that can be given to Convert.ToInt32
+            /// </summary>
             public string ValueString = null;
             public ushort Result;
             public int Base = -1;
             public bool Literal;
             public bool Finished = false;
+            public bool MakeNegative = false;
         }
 
         /// <summary>
@@ -75,12 +79,39 @@ namespace Assembler6502Net
                 Assembly.OpCode.BVS
             };
 
+
         int getNumeral()
         {
-            return Convert.ToInt32(
-                ComputedValue.ValueString,
-                ComputedValue.Base
-            );
+            try
+            {
+                int ret = Convert.ToInt32(
+                    ComputedValue.ValueString,
+                    ComputedValue.Base
+                );
+                if (ComputedValue.MakeNegative)
+                    ret *= -1;
+                //throw new Exception("Got the number: " + ComputedValue.ValueString);
+                return ret;
+            }
+            catch (FormatException ex)
+            {
+                throw new FormatException("Error parsing '" + ComputedValue.ValueString + "' in base " + ComputedValue.Base + ": " + ex.Message, ex);
+            }
+
+        }
+
+        ushort twosComplement8bit(int n)
+        {
+            if (n < sbyte.MinValue)
+                throw new SyntaxErrorException("Negative value out of range for byte");
+            if (n >= 0)
+                throw new InvalidOperationException("Attempt to use twosComplement8bit on nonnegative");
+            n *= -1;
+            n = ((byte)n) ^ byte.MaxValue;
+
+            n++;
+
+            return (ushort)n;
         }
 
         /// <summary>
@@ -90,11 +121,12 @@ namespace Assembler6502Net
         {
             if (nval < 0)
             {
-                if (nval < sbyte.MinValue)
-                    throw new SyntaxErrorException("Negative value out of range for byte");
-                nval *= -1;
-                nval = ((byte)nval) ^ byte.MaxValue;
-                nval++;
+                nval = twosComplement8bit(nval);
+            }
+
+            if (nval > ushort.MaxValue)
+            {
+                throw new SyntaxErrorException("Value out of range");
             }
 
             ComputedValue.Result = (ushort)nval;
@@ -108,19 +140,27 @@ namespace Assembler6502Net
         /// <param name="pc"></param>
         void setValue(Assembly.AddressingMethod AddressingMethod, ushort pc)
         {
-            int nval = getNumeral();
+            int nval = 0;
+            try
+            {
+                nval = getNumeral();
+            }
+            catch (FormatException ex)
+            {
+                throw new SyntaxErrorException("Invalid label or literal", ex);
+            }
 
             if (AddressingMethod == Assembly.AddressingMethod.relative)
                 nval -= (short)pc;
 
             if (nval < 0)
             {
-                if (nval < sbyte.MinValue)
-                    throw new SyntaxErrorException("Negative value out of range for byte");
-                nval *= -1;
-                nval = ((byte)nval) ^ byte.MaxValue;
+                nval = twosComplement8bit(nval);
+            }
 
-                nval++;
+            if (nval > ushort.MaxValue)
+            {
+                throw new SyntaxErrorException("Value out of range");
             }
 
             setValue(nval);
@@ -132,6 +172,8 @@ namespace Assembler6502Net
             ComputedValue = new ComputedValueResult();
 
             ComputedValue.Literal = ValueMiddle.StartsWith("#");
+
+            bool found = false;
 
             foreach (char identifier in BaseIdentifiers.Keys)
             {
@@ -149,17 +191,33 @@ namespace Assembler6502Net
                         ComputedValue.ValueString = "0";
                         ComputedValue.Base = 10;
 
-                        return;
+                        found = true;
+                        break;
                     }
 
                     ComputedValue.Base = BaseIdentifiers[identifier];
-
-                    return;
+                    found = true;
+                    break;
                 }
             }
+            if (!found)
+            {
+                ComputedValue.ValueString = ValueMiddle;
+                if (ComputedValue.Literal)
+                {
+                    ComputedValue.ValueString = ComputedValue.ValueString.Substring(1, ComputedValue.ValueString.Length - 1);
+                }
+                ComputedValue.Base = 10;
+            }
 
-            ComputedValue.ValueString = ValueMiddle;
-            ComputedValue.Base = 10;
+            //if (ComputedValue.Literal)
+            //    ComputedValue.ValueString = ComputedValue.ValueString.Substring(1, ComputedValue.ValueString.Length - 1);
+
+            if (ComputedValue.ValueString.StartsWith("-"))
+            {
+                ComputedValue.ValueString = ComputedValue.ValueString.Substring(1, ComputedValue.ValueString.Length - 1);
+                ComputedValue.MakeNegative = true;
+            }
 
             return;
         }

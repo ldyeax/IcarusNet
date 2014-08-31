@@ -17,6 +17,7 @@ namespace Assembler6502Net
         }
         public OperandLengthOption OperandLength = OperandLengthOption.AsWritten;
         public bool ReallocateIfOutOfBounds = false;
+        public uint FileStartAddress = 0;
     }
 
     public class Assembler
@@ -38,7 +39,7 @@ namespace Assembler6502Net
                 Variables = new SortedDictionary<string, string>();
                 currentReadingLine = 0;
                 didFirstPass = false;
-                lines = null;
+                Lines = null;
 
                 text = value;
             }
@@ -76,15 +77,7 @@ namespace Assembler6502Net
         /// </summary>
         public SortedDictionary<string, string> Variables = new SortedDictionary<string, string>(new VariableComperer());
 
-        static byte[] ushortToLE(ushort data)
-        {
-            byte[] b = new byte[2];
-            b[0] = (byte)data;
-            b[1] = (byte)(((uint)data >> 8) & 0xFF);
-            return b;
-        }
-
-        Line[] lines;
+        public Line[] Lines;
         bool didFirstPass = false;
         int currentReadingLine = -1;
 
@@ -97,16 +90,16 @@ namespace Assembler6502Net
         {
             string[] strlines = text.ToUpper().Split('\n');
 
-            lines = new Line[strlines.Length];
+            Lines = new Line[strlines.Length];
 
             ushort pc = 0;
             ushort highestPC = 0;
 
             //First pass resolves variables and sets labels 
-            for (currentReadingLine = 0; currentReadingLine < lines.Length; ++currentReadingLine)
+            for (currentReadingLine = 0; currentReadingLine < Lines.Length; ++currentReadingLine)
             {
-                lines[currentReadingLine] = new Line(strlines[currentReadingLine], currentReadingLine);
-                Line line = lines[currentReadingLine];
+                Lines[currentReadingLine] = new Line(strlines[currentReadingLine], currentReadingLine);
+                Line line = Lines[currentReadingLine];
 
                 line.PC = pc;
 
@@ -170,37 +163,30 @@ namespace Assembler6502Net
             AssemblerGroup.AddLabels(Labels);
             didFirstPass = true;
         }
-
-        void secondPass()
+        /// <summary>
+        /// if facade, results are not actually written - useful for preprocessing for errors in a text entry field
+        /// </summary>
+        /// <param name="facade"></param>
+        void secondPass(bool facade = false)
         {
             //Second pass resolves labels and generates machine code
-            for (currentReadingLine = 0; currentReadingLine < lines.Length; ++currentReadingLine)
+            for (currentReadingLine = 0; currentReadingLine < Lines.Length; ++currentReadingLine)
             {
-                Line line = lines[currentReadingLine];
+                Line line = Lines[currentReadingLine];
                 ushort pc = line.PC;
 
                 if (line.OpCode != null)
                 {
                     line.ResolveLabelsAndAssembleSecondPass(this, currentReadingLine);
 
-                    this.Bytes[pc] = Assembly.OpcodeTable[line.OpCode.Value][line.AddressingMethod.Value];
-
-                    switch (Assembly.AddressingMethodLength[line.AddressingMethod.Value])
+                    if (!facade)
                     {
-                        case 0:
-                            break;
-                        case 1:
-                            {
-                                this.Bytes[pc + 1] = (byte)line.RValue.ComputedValue.Result;
-                            }
-                            break;
-                        case 2:
-                            {
-                                var le = ushortToLE(line.RValue.ComputedValue.Result);
-                                this.Bytes[pc + 1] = le[0];
-                                this.Bytes[pc + 2] = le[1];
-                            }
-                            break;
+                        this.Bytes[Config.FileStartAddress + pc] = Assembly.OpcodeTable[line.OpCode.Value][line.AddressingMethod.Value];
+
+                        for (int j = 0; j < line.ComputedBytes.Count; ++j)
+                        {
+                            this.Bytes[pc + Config.FileStartAddress + j + 1] = line.ComputedBytes[j];
+                        }
                     }
                 }
             }
@@ -210,12 +196,12 @@ namespace Assembler6502Net
 
         void execWithWrappedException(Action act)
         {
-
+            
             //If debugging, let the debugger catch it
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                act();
-                return;
+            //    act();
+            //    return;
             }
 
             try
@@ -234,13 +220,16 @@ namespace Assembler6502Net
                     throw new SyntaxErrorException(currentReadingLine, ex);
             }
         }
-
-        public void Assemble()
+        /// <summary>
+        /// if facade, don't actually write to the output - useful for finding errors in text entry fields
+        /// </summary>
+        /// <param name="facade"></param>
+        public void Assemble(bool facade = false)
         {
             if (!didFirstPass)
                 throw new InvalidOperationException("Assemble cannot be called until FirstPass has been called");
 
-            execWithWrappedException(secondPass);
+            execWithWrappedException(() => secondPass(facade));
 
         }
 
@@ -253,7 +242,7 @@ namespace Assembler6502Net
         public int Line = 0;
         public SyntaxErrorException() : base() { }
         public SyntaxErrorException(string s, Exception ex = null) : base(s, ex) { }
-        public SyntaxErrorException(int line, Exception ex = null) : base("Unspecified", ex)
+        public SyntaxErrorException(int line, Exception ex = null) : base(ex.Message, ex)
         {
             Line = line;
         }
@@ -263,6 +252,10 @@ namespace Assembler6502Net
             Line = line;
         }
 
+        public override string ToString()
+        {
+            return "Line " + (Line+1) + ": " + this.Message;
+        }
     }
 
 

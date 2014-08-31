@@ -1,0 +1,1 @@
+I modified this by putting the form into its own dll and adding a line setter delegate

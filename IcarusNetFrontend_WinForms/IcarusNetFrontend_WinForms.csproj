@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ref\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RichTextBoxWithLineNumbers">
+      <HintPath>ref\RichTextBoxWithLineNumbers.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

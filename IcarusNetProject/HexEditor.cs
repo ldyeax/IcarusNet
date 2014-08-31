@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace IcarusNetProject.Components
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     public class HexEditor : Component
     {
         public string FilePath = "";
@@ -22,10 +23,10 @@ namespace IcarusNetProject.Components
             FileWatcher = new FileSystemWatcher(FilePath);
         }
 
-        public override void PreBuild(Project project)
-        {
-            throw new NotImplementedException();
-        }
+        //public override void PreBuild(Project project)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public override void Build(Project project)
         {

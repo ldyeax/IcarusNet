@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Assembler6502Net;
+using Newtonsoft.Json;
 
 namespace IcarusNetProject.Components
 {
@@ -19,18 +20,28 @@ namespace IcarusNetProject.Components
     {
         public int X = 0;
         public int Y = 0;
-        public int Width = 300;
-        public int Height = 200;
+        public int Width = 600;
+        public int Height = 400;
         public int ExecutionOrder = 0;
         public WindowState WindowState = WindowState.Normal;
+        public string Name = null;
 
-        public abstract void Initialize(Project project);
-        public abstract void PreBuild(Project project);
+        [JsonIgnore]
+        public Action PreSave = () => { };
+        [JsonIgnore]
+        public Action PreBuild = () => { };
+        [JsonIgnore]
+        public Project Project;
+
+        public virtual void Initialize(Project project)
+        {
+            this.Project = project;
+        }
         public abstract void Build(Project project);
 
         public Component()
         {
-
+            
         }
 
         public int CompareTo(Component other)

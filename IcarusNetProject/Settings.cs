@@ -9,5 +9,6 @@ namespace IcarusNetProject
     {
         public string InputFile;
         public string OutputFile;
+        public string ExecAfterBuild;
     }
 }

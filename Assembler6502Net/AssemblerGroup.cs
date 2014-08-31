@@ -32,9 +32,10 @@ namespace Assembler6502Net
 
         List<string> bannedLabels = new List<string>();
 
-        public void AddLabels(Dictionary<string, ushort> newLabels)
+        public void AddLabels(Dictionary<string, ushort> pnewLabels)
         {
-            foreach (var pair in newLabels)
+            var newLabels = new Dictionary<string, ushort>(pnewLabels);
+            foreach (var pair in pnewLabels)
             {
                 if (bannedLabels.Contains(pair.Key))
                     continue;

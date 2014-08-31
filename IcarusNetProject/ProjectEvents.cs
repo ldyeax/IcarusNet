@@ -12,5 +12,7 @@ namespace IcarusNetProject
         public Action<Component> ComponentAdded = (c) => { };
         public Action<Component> ComponentRemoved = (c) => { };
         public Action BuildFinished = () => { };
+        public Action Saved = () => { };
+        public Action PreSave = () => { };
     }
 }

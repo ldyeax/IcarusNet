@@ -11,7 +11,7 @@ namespace IcarusNetProject.Components
 {
     public class AssemblyEditor : FileComponent
     {
-        public AssemblerConfig Config;
+        public AssemblerConfig Config = new AssemblerConfig() { OperandLength = AssemblerConfig.OperandLengthOption.AsWritten, ReallocateIfOutOfBounds = false };
 
         [JsonIgnore]
         public Assembler Assembler;
@@ -31,14 +31,19 @@ namespace IcarusNetProject.Components
 
         public override void Initialize(Project project)
         {
+            base.Initialize(project);
+
             if (!File.Exists(FilePath))
                 File.Create(FilePath).Close();
-            
+            this.Name = new FileInfo(FilePath).Name;
             this.Assembler = new Assembler(this.Config) { Text = File.ReadAllText(FilePath) };
+
             project.AssemblerGroup.Add(Assembler);
+            project.Events.Saved += SaveFile;
+            this.PreBuild += () => { preBuild(this.Project); };
         }
 
-        public override void PreBuild(Project project)
+        void preBuild(Project project)
         {
             this.Assembler.Bytes = project.Bytes;
             this.Assembler.FirstPass();

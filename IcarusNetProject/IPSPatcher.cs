@@ -70,10 +70,10 @@ namespace IcarusNetProject.Components
             
         }
 
-        public override void PreBuild(Project project)
-        {
+        //public override void PreBuild(Project project)
+        //{
             
-        }
+        //}
 
         public override void Build(Project project)
         {
@@ -83,7 +83,7 @@ namespace IcarusNetProject.Components
 
         public override void SaveFile()
         {
-            throw new InvalidOperationException("Cannot save an IPSPatcher");
+            //throw new InvalidOperationException("Cannot save an IPSPatcher");
         }
 
         #endregion

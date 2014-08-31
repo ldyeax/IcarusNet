@@ -12,28 +12,50 @@ namespace IcarusNetFrontend_Winforms
 {
     public partial class AssemblerConfigForm : Form
     {
-        public AssemblerConfigForm()
+        public AssemblerConfigForm(AssemblerConfig conf)
         {
+            _config = conf;
             InitializeComponent();
         }
+
+        private AssemblerConfig _config;
 
         public AssemblerConfig Config
         {
             get
             {
-                if (lbAddressingOptions.SelectedItem == null)
-                    return new AssemblerConfig()
+                uint startaddr = 0;
+                try
+                {
+                    startaddr = Convert.ToUInt32(txtStartAddr.Text);
+                }
+                catch (FormatException)
+                {
+                    try
                     {
-                         ReallocateIfOutOfBounds = rbFilesize.Checked
-                    };
+                        startaddr = Convert.ToUInt32(txtStartAddr.Text, 16);
+                    }
+                    catch (FormatException)
+                    {
+                        startaddr = 0;
+                        MessageBox.Show("Invalid starting address");
+                    }
+                }
 
                 return new AssemblerConfig()
                 {
-                     OperandLength = (AssemblerConfig.OperandLengthOption)
-                        Enum.Parse(typeof(AssemblerConfig.OperandLengthOption),
-                            lbAddressingOptions.SelectedItem.ToString()
-                        ),
-                    ReallocateIfOutOfBounds = rbFilesize.Checked
+                     OperandLength = 
+                        lbAddressingOptions.SelectedItem != null ?
+                            (AssemblerConfig.OperandLengthOption)
+                                Enum.Parse(typeof(AssemblerConfig.OperandLengthOption),
+                                    lbAddressingOptions.SelectedItem.ToString()
+                                )
+                            :
+                            AssemblerConfig.OperandLengthOption.AsWritten,
+
+                    ReallocateIfOutOfBounds = rbFilesize.Checked,
+
+                    FileStartAddress = startaddr
                 };
             }
         }
@@ -42,7 +64,10 @@ namespace IcarusNetFrontend_Winforms
         {
             foreach (string s in Enum.GetNames(typeof(AssemblerConfig.OperandLengthOption)))
                 lbAddressingOptions.Items.Add(s);
-            
+
+            lbAddressingOptions.SelectedItem = lbAddressingOptions.Items.OfType<object>().Where(o => o.ToString() == _config.OperandLength.ToString()).First();
+            rbFilesize.Checked =  _config.ReallocateIfOutOfBounds;
+            txtStartAddr.Text = "0x" + Convert.ToString(_config.FileStartAddress, 16);
         }
     }
 }

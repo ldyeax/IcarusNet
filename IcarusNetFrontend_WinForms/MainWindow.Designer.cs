@@ -28,152 +28,215 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnBuild = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.txtFileSize = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnClearBytes = new System.Windows.Forms.Button();
+            this.components = new System.ComponentModel.Container();
             this.btnAddAssembler = new System.Windows.Forms.Button();
-            this.btnAddHexView = new System.Windows.Forms.Button();
-            this.btnNewProject = new System.Windows.Forms.Button();
-            this.btnOpenProject = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
+            this.lbProjectControls = new System.Windows.Forms.ListBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.pnlComponentZoo = new System.Windows.Forms.Panel();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.toolstrip_new = new System.Windows.Forms.MenuItem();
+            this.toolstrip_open = new System.Windows.Forms.MenuItem();
+            this.toolstrip_saveProject = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.toolstrip_build = new System.Windows.Forms.MenuItem();
+            this.toolstrip_buildAndRun = new System.Windows.Forms.MenuItem();
+            this.toolstrip_buildOptions = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.toolstrip_help = new System.Windows.Forms.MenuItem();
+            this.toolstrip_about = new System.Windows.Forms.MenuItem();
+            this.txtOutput = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // btnBuild
-            // 
-            this.btnBuild.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBuild.Location = new System.Drawing.Point(711, 122);
-            this.btnBuild.Name = "btnBuild";
-            this.btnBuild.Size = new System.Drawing.Size(113, 23);
-            this.btnBuild.TabIndex = 1;
-            this.btnBuild.Text = "Build";
-            this.btnBuild.UseVisualStyleBackColor = true;
-            this.btnBuild.Click += new System.EventHandler(this.btnBuild_Click);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(692, 4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(405, 26);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Alpha version of 6502  IDE. Assembles correctly as far as I know. ldyeax@gmail.co" +
-    "m\r\nOutput dumped to output.bin";
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.txtFileSize);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(695, 34);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(129, 30);
-            this.panel1.TabIndex = 6;
-            // 
-            // txtFileSize
-            // 
-            this.txtFileSize.Location = new System.Drawing.Point(54, 4);
-            this.txtFileSize.Name = "txtFileSize";
-            this.txtFileSize.Size = new System.Drawing.Size(64, 20);
-            this.txtFileSize.TabIndex = 1;
-            this.txtFileSize.Text = "1024";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 4);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Filesize:";
-            // 
-            // btnClearBytes
-            // 
-            this.btnClearBytes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearBytes.Location = new System.Drawing.Point(711, 85);
-            this.btnClearBytes.Name = "btnClearBytes";
-            this.btnClearBytes.Size = new System.Drawing.Size(113, 23);
-            this.btnClearBytes.TabIndex = 8;
-            this.btnClearBytes.Text = "Clear Bytes";
-            this.btnClearBytes.UseVisualStyleBackColor = true;
-            this.btnClearBytes.Click += new System.EventHandler(this.btnClearBytes_Click);
             // 
             // btnAddAssembler
             // 
-            this.btnAddAssembler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddAssembler.Location = new System.Drawing.Point(711, 151);
+            this.btnAddAssembler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddAssembler.Location = new System.Drawing.Point(971, 584);
             this.btnAddAssembler.Name = "btnAddAssembler";
-            this.btnAddAssembler.Size = new System.Drawing.Size(113, 23);
+            this.btnAddAssembler.Size = new System.Drawing.Size(126, 23);
             this.btnAddAssembler.TabIndex = 11;
-            this.btnAddAssembler.Text = "Add Assembler";
+            this.btnAddAssembler.Tag = "NeedOpenProject";
+            this.btnAddAssembler.Text = "New Assembly Source";
             this.btnAddAssembler.UseVisualStyleBackColor = true;
             this.btnAddAssembler.Click += new System.EventHandler(this.btnAddAssembler_Click);
             // 
-            // btnAddHexView
+            // lbProjectControls
             // 
-            this.btnAddHexView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddHexView.Location = new System.Drawing.Point(711, 180);
-            this.btnAddHexView.Name = "btnAddHexView";
-            this.btnAddHexView.Size = new System.Drawing.Size(113, 23);
-            this.btnAddHexView.TabIndex = 12;
-            this.btnAddHexView.Text = "Add Hex View";
-            this.btnAddHexView.UseVisualStyleBackColor = true;
-            this.btnAddHexView.Click += new System.EventHandler(this.btnAddHexView_Click);
+            this.lbProjectControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbProjectControls.FormattingEnabled = true;
+            this.lbProjectControls.Location = new System.Drawing.Point(971, 7);
+            this.lbProjectControls.Name = "lbProjectControls";
+            this.lbProjectControls.Size = new System.Drawing.Size(126, 498);
+            this.lbProjectControls.TabIndex = 16;
+            this.lbProjectControls.Tag = "NeedOpenProject";
+            this.lbProjectControls.SelectedIndexChanged += new System.EventHandler(this.lbProjectControls_SelectedIndexChanged);
+            this.lbProjectControls.DoubleClick += new System.EventHandler(this.lbProjectControls_DoubleClick);
+            this.lbProjectControls.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbProjectControls_MouseDown);
             // 
-            // btnNewProject
+            // button1
             // 
-            this.btnNewProject.Location = new System.Drawing.Point(12, 12);
-            this.btnNewProject.Name = "btnNewProject";
-            this.btnNewProject.Size = new System.Drawing.Size(113, 23);
-            this.btnNewProject.TabIndex = 13;
-            this.btnNewProject.Text = "New";
-            this.btnNewProject.UseVisualStyleBackColor = true;
-            this.btnNewProject.Click += new System.EventHandler(this.btnNewProject_Click);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(971, 555);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(126, 23);
+            this.button1.TabIndex = 17;
+            this.button1.Tag = "NeedOpenProject";
+            this.button1.Text = "Add Existing File";
+            this.button1.UseVisualStyleBackColor = true;
             // 
-            // btnOpenProject
+            // btnUp
             // 
-            this.btnOpenProject.Location = new System.Drawing.Point(12, 41);
-            this.btnOpenProject.Name = "btnOpenProject";
-            this.btnOpenProject.Size = new System.Drawing.Size(113, 23);
-            this.btnOpenProject.TabIndex = 14;
-            this.btnOpenProject.Text = "Open";
-            this.btnOpenProject.UseVisualStyleBackColor = true;
-            this.btnOpenProject.Click += new System.EventHandler(this.btnOpenProject_Click);
+            this.btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUp.Location = new System.Drawing.Point(971, 516);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(63, 23);
+            this.btnUp.TabIndex = 18;
+            this.btnUp.Tag = "NeedOpenProject";
+            this.btnUp.Text = "^";
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
-            // btnSave
+            // btnDown
             // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(12, 70);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(113, 23);
-            this.btnSave.TabIndex = 15;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDown.Location = new System.Drawing.Point(1034, 516);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(63, 23);
+            this.btnDown.TabIndex = 19;
+            this.btnDown.Tag = "NeedOpenProject";
+            this.btnDown.Text = "v";
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            // 
+            // pnlComponentZoo
+            // 
+            this.pnlComponentZoo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlComponentZoo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlComponentZoo.Location = new System.Drawing.Point(0, 7);
+            this.pnlComponentZoo.Name = "pnlComponentZoo";
+            this.pnlComponentZoo.Size = new System.Drawing.Size(959, 549);
+            this.pnlComponentZoo.TabIndex = 20;
+            // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem2,
+            this.menuItem3});
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.toolstrip_new,
+            this.toolstrip_open,
+            this.toolstrip_saveProject});
+            this.menuItem1.Text = "File";
+            // 
+            // toolstrip_new
+            // 
+            this.toolstrip_new.Index = 0;
+            this.toolstrip_new.Shortcut = System.Windows.Forms.Shortcut.CtrlN;
+            this.toolstrip_new.Text = "New";
+            this.toolstrip_new.Click += new System.EventHandler(this.toolstrip_new_Click);
+            // 
+            // toolstrip_open
+            // 
+            this.toolstrip_open.Index = 1;
+            this.toolstrip_open.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
+            this.toolstrip_open.Text = "Open";
+            this.toolstrip_open.Click += new System.EventHandler(this.toolstrip_open_Click);
+            // 
+            // toolstrip_saveProject
+            // 
+            this.toolstrip_saveProject.Index = 2;
+            this.toolstrip_saveProject.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
+            this.toolstrip_saveProject.Text = "Save";
+            this.toolstrip_saveProject.Click += new System.EventHandler(this.toolstrip_saveProject_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.toolstrip_build,
+            this.toolstrip_buildAndRun,
+            this.toolstrip_buildOptions});
+            this.menuItem2.Text = "Build";
+            // 
+            // toolstrip_build
+            // 
+            this.toolstrip_build.Index = 0;
+            this.toolstrip_build.Shortcut = System.Windows.Forms.Shortcut.CtrlShiftB;
+            this.toolstrip_build.Text = "Build";
+            this.toolstrip_build.Click += new System.EventHandler(this.toolstrip_build_Click);
+            // 
+            // toolstrip_buildAndRun
+            // 
+            this.toolstrip_buildAndRun.Index = 1;
+            this.toolstrip_buildAndRun.Shortcut = System.Windows.Forms.Shortcut.F5;
+            this.toolstrip_buildAndRun.Text = "Build and Run";
+            this.toolstrip_buildAndRun.Click += new System.EventHandler(this.toolstrip_buildAndRun_Click);
+            // 
+            // toolstrip_buildOptions
+            // 
+            this.toolstrip_buildOptions.Index = 2;
+            this.toolstrip_buildOptions.Text = "Options";
+            this.toolstrip_buildOptions.Click += new System.EventHandler(this.toolstrip_buildOptions_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 2;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.toolstrip_help,
+            this.toolstrip_about});
+            this.menuItem3.Text = "Help";
+            // 
+            // toolstrip_help
+            // 
+            this.toolstrip_help.Index = 0;
+            this.toolstrip_help.Text = "Help";
+            this.toolstrip_help.Click += new System.EventHandler(this.toolstrip_help_Click);
+            // 
+            // toolstrip_about
+            // 
+            this.toolstrip_about.Index = 1;
+            this.toolstrip_about.Text = "About";
+            this.toolstrip_about.Click += new System.EventHandler(this.toolstrip_about_Click);
+            // 
+            // txtOutput
+            // 
+            this.txtOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtOutput.Location = new System.Drawing.Point(0, 562);
+            this.txtOutput.Multiline = true;
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.ReadOnly = true;
+            this.txtOutput.Size = new System.Drawing.Size(959, 45);
+            this.txtOutput.TabIndex = 21;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1109, 579);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.btnOpenProject);
-            this.Controls.Add(this.btnNewProject);
-            this.Controls.Add(this.btnAddHexView);
+            this.ClientSize = new System.Drawing.Size(1109, 610);
+            this.Controls.Add(this.txtOutput);
+            this.Controls.Add(this.pnlComponentZoo);
+            this.Controls.Add(this.btnDown);
+            this.Controls.Add(this.btnUp);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.lbProjectControls);
             this.Controls.Add(this.btnAddAssembler);
-            this.Controls.Add(this.btnClearBytes);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnBuild);
+            this.KeyPreview = true;
+            this.Menu = this.mainMenu1;
             this.Name = "MainWindow";
             this.Text = "IcarusNet";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainWindow_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -181,17 +244,25 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnBuild;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox txtFileSize;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnClearBytes;
         private System.Windows.Forms.Button btnAddAssembler;
-        private System.Windows.Forms.Button btnAddHexView;
-        private System.Windows.Forms.Button btnNewProject;
-        private System.Windows.Forms.Button btnOpenProject;
-        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.ListBox lbProjectControls;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnUp;
+        private System.Windows.Forms.Button btnDown;
+        private System.Windows.Forms.Panel pnlComponentZoo;
+        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem toolstrip_open;
+        private System.Windows.Forms.MenuItem toolstrip_saveProject;
+        private System.Windows.Forms.MenuItem toolstrip_new;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem toolstrip_build;
+        private System.Windows.Forms.MenuItem toolstrip_buildAndRun;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem toolstrip_help;
+        private System.Windows.Forms.MenuItem toolstrip_about;
+        private System.Windows.Forms.TextBox txtOutput;
+        private System.Windows.Forms.MenuItem toolstrip_buildOptions;
     }
 }
 

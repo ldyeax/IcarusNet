@@ -33,7 +33,8 @@ namespace IcarusNetFrontend_Winforms
             
             Project.Create(
                 pathtoproject,
-                new Settings() {
+                new Settings()
+                {
                     InputFile = cbMakeCopy.Checked ? new FileInfo(inputFile).Name : inputFile, 
                     OutputFile = txtOutputFileName.Text 
                 }
