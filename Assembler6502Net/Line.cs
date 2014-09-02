@@ -251,6 +251,8 @@ namespace Assembler6502Net
                     break;
                 case 1:
                     {
+                        if (RValue.ComputedValue.Result > byte.MaxValue)
+                            throw new SyntaxErrorException("Value out of range for byte");
                         ComputedBytes.Add((byte)RValue.ComputedValue.Result);
                     }
                     break;
