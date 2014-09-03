@@ -20,7 +20,7 @@ namespace IcarusNetFrontend_Winforms
     public partial class MainWindow : Form
     {
         #region variables
-
+        
         Project OpenProject
         {
             get
