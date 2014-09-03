@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IcarusNetFrontend_WinForms", "IcarusNetFrontend_WinForms\IcarusNetFrontend_WinForms.csproj", "{6469FC9C-9F52-44EC-9A50-F0C1B82503C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6893EF44-FEA3-46DF-B236-C4C200F54294} = {6893EF44-FEA3-46DF-B236-C4C200F54294}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler6502Net", "Assembler6502Net\Assembler6502Net.csproj", "{82FAE6AE-BFC5-4D96-83EE-E271B99BFF8E}"
 EndProject
