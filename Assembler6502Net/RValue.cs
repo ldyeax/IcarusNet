@@ -233,7 +233,6 @@ namespace Assembler6502Net
                 return;
 
             parseValue();
-            //something has gone wrong 
             setValue(getNumeral());
         }
 

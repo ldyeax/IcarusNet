@@ -440,7 +440,8 @@ namespace IcarusNetFrontend_Winforms
 
         private void toolstrip_open_Click(object sender, EventArgs e)
         {
-
+            OpenProject = Project.Load(getEvents(), @"C:\users\user\icarproj\hope");
+            return;
 
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             var result = dialog.ShowDialog();
