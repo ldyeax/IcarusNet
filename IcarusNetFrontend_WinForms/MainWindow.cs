@@ -503,8 +503,8 @@ namespace IcarusNetFrontend_Winforms
             try
             {
                 OpenProject.Build();
-                //System.Diagnostics.Process.Start(..
                 setMessage("Build successful. Running post-run command.");
+                System.Diagnostics.Process.Start(Path.Combine( Application.StartupPath, "fceux", "fceux.exe") , OpenProject.PathToOutputFile);
             }
             catch (BuildErrorException ex)
             {
@@ -533,6 +533,5 @@ namespace IcarusNetFrontend_Winforms
         }
 
         #endregion
-
     }
 }

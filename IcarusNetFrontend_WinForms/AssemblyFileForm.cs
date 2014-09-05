@@ -17,6 +17,46 @@ namespace IcarusNetFrontend_Winforms
     [IcarusNetComponent(typeof(IcarusNetProject.Components.AssemblyEditor))]
     public partial class AssemblyFileForm : Form, IProjectComponentForm
     {
+        public AssemblerConfig Config
+        {
+            get
+            {
+                uint startaddr = 0;
+                try
+                {
+                    startaddr = Convert.ToUInt32(txtStartAddr.Text);
+                }
+                catch (FormatException)
+                {
+                    try
+                    {
+                        startaddr = Convert.ToUInt32(txtStartAddr.Text, 16);
+                    }
+                    catch (FormatException)
+                    {
+                        startaddr = 0;
+                        MessageBox.Show("Invalid starting address");
+                    }
+                }
+
+                return new AssemblerConfig()
+                {
+                    OperandLength =
+                       cbAddressingPreference.SelectedItem != null ?
+                           (AssemblerConfig.OperandLengthOption)
+                               Enum.Parse(typeof(AssemblerConfig.OperandLengthOption),
+                                   cbAddressingPreference.SelectedItem.ToString()
+                               )
+                           :
+                           AssemblerConfig.OperandLengthOption.AsWritten,
+
+                    ReallocateIfOutOfBounds = rbFilesize.Checked,
+
+                    FileStartAddress = startaddr
+                };
+            }
+        }
+
         IcarusNetProject.Components.AssemblyEditor _projectEditorComponent;
         public IcarusNetProject.Components.AssemblyEditor ProjectEditorComponent
         {
@@ -161,6 +201,16 @@ namespace IcarusNetFrontend_Winforms
         {
             this.txtLineNumbers.LineTextSetter = setTextFromLineNo;
             this.txtHexValues.LineTextSetter = setHexStringFromLineNo;
+
+            foreach (string s in Enum.GetNames(typeof(AssemblerConfig.OperandLengthOption)))
+                cbAddressingPreference.Items.Add(s);
+
+            cbAddressingPreference.SelectedItem = cbAddressingPreference.Items.OfType<object>().Where(
+                o => o.ToString() == this.ProjectEditorComponent.Assembler.Config.OperandLength.ToString()
+            ).First();
+
+            rbFilesize.Checked = this.ProjectEditorComponent.Assembler.Config.ReallocateIfOutOfBounds;
+            txtStartAddr.Text = "0x" + Convert.ToString(this.ProjectEditorComponent.Assembler.Config.FileStartAddress, 16);
         }
         public AssemblyFileForm()
         {

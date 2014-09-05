@@ -29,12 +29,16 @@
         private void InitializeComponent()
         {
             this.txtInputAssembly = new System.Windows.Forms.RichTextBox();
-            this.btnConfig = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtOrder = new System.Windows.Forms.TextBox();
             this.txtLineNumbers = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers();
             this.lblErrorOutput = new System.Windows.Forms.Label();
             this.txtHexValues = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers();
+            this.txtStartAddr = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.rbFilesize = new System.Windows.Forms.RadioButton();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbAddressingPreference = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // txtInputAssembly
@@ -55,21 +59,10 @@
             this.txtInputAssembly.Leave += new System.EventHandler(this.txtInputAssembly_Leave);
             this.txtInputAssembly.Resize += new System.EventHandler(this.txtInputAssembly_Resize);
             // 
-            // btnConfig
-            // 
-            this.btnConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConfig.Location = new System.Drawing.Point(681, 12);
-            this.btnConfig.Name = "btnConfig";
-            this.btnConfig.Size = new System.Drawing.Size(75, 23);
-            this.btnConfig.TabIndex = 10;
-            this.btnConfig.Text = "Config";
-            this.btnConfig.UseVisualStyleBackColor = true;
-            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Location = new System.Drawing.Point(-2, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(36, 13);
             this.label1.TabIndex = 11;
@@ -77,7 +70,7 @@
             // 
             // txtOrder
             // 
-            this.txtOrder.Location = new System.Drawing.Point(56, 13);
+            this.txtOrder.Location = new System.Drawing.Point(41, 14);
             this.txtOrder.Name = "txtOrder";
             this.txtOrder.Size = new System.Drawing.Size(26, 20);
             this.txtOrder.TabIndex = 12;
@@ -177,17 +170,66 @@
             this.txtHexValues.Size = new System.Drawing.Size(70, 377);
             this.txtHexValues.TabIndex = 13;
             // 
+            // txtStartAddr
+            // 
+            this.txtStartAddr.Location = new System.Drawing.Point(110, 15);
+            this.txtStartAddr.Name = "txtStartAddr";
+            this.txtStartAddr.Size = new System.Drawing.Size(136, 20);
+            this.txtStartAddr.TabIndex = 20;
+            this.txtStartAddr.Text = "0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(107, -1);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(103, 13);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "File starting address:";
+            // 
+            // rbFilesize
+            // 
+            this.rbFilesize.AutoSize = true;
+            this.rbFilesize.Location = new System.Drawing.Point(379, 19);
+            this.rbFilesize.Name = "rbFilesize";
+            this.rbFilesize.Size = new System.Drawing.Size(126, 17);
+            this.rbFilesize.TabIndex = 21;
+            this.rbFilesize.TabStop = true;
+            this.rbFilesize.Text = "Allow Expand Filesize";
+            this.rbFilesize.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(249, -1);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(117, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "Addressing Preference:";
+            // 
+            // cbAddressingPreference
+            // 
+            this.cbAddressingPreference.FormattingEnabled = true;
+            this.cbAddressingPreference.Location = new System.Drawing.Point(252, 15);
+            this.cbAddressingPreference.Name = "cbAddressingPreference";
+            this.cbAddressingPreference.Size = new System.Drawing.Size(121, 21);
+            this.cbAddressingPreference.TabIndex = 24;
+            // 
             // AssemblyFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 496);
+            this.Controls.Add(this.cbAddressingPreference);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.rbFilesize);
+            this.Controls.Add(this.txtStartAddr);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblErrorOutput);
             this.Controls.Add(this.txtLineNumbers);
             this.Controls.Add(this.txtOrder);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.txtInputAssembly);
             this.Name = "AssemblyFileForm";
             this.ShowIcon = false;
@@ -203,12 +245,16 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnConfig;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtOrder;
         private System.Windows.Forms.RichTextBox txtInputAssembly;
         private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtLineNumbers;
         private System.Windows.Forms.Label lblErrorOutput;
         private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtHexValues;
+        private System.Windows.Forms.TextBox txtStartAddr;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton rbFilesize;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cbAddressingPreference;
     }
 }
