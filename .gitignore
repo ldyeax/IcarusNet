@@ -20,3 +20,5 @@ FCEUX/vc/vc10_obj_Debug/
 FCEUX/vc/obj/
 FCEUX/vc/bin/
 FCEUX/vc/vc10_obj_Release/
+*.opensdf
+*.sdf
