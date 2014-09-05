@@ -146,7 +146,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /D $(SolutionDir)FCEUX\vc\bin $(ProjectDir)$(OutDir)fceux\</PostBuildEvent>
+    <PostBuildEvent>xcopy /D /Y $(SolutionDir)FCEUX\vc\bin $(ProjectDir)$(OutDir)fceux\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
