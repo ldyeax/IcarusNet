@@ -48,5 +48,11 @@ namespace IcarusNetFrontend_Winforms
             NewProjectPath = pathtoproject;
             this.Close();
         }
+
+        private void NewProjectForm_Load(object sender, EventArgs e)
+        {
+            txtCreateUnder.Text = ProjectLocations.ProjectsDir;
+            txtInputFile.Text = ProjectLocations.ExampleRomFile;
+        }
     }
 }

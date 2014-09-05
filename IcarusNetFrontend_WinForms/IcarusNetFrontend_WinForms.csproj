@@ -97,6 +97,7 @@
       <DependentUpon>NewProjectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectLocations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AssemblerConfigForm.resx">
       <DependentUpon>AssemblerConfigForm.cs</DependentUpon>

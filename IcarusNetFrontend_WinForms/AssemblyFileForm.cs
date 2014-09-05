@@ -17,6 +17,7 @@ namespace IcarusNetFrontend_Winforms
     [IcarusNetComponent(typeof(IcarusNetProject.Components.AssemblyEditor))]
     public partial class AssemblyFileForm : Form, IProjectComponentForm
     {
+
         public AssemblerConfig Config
         {
             get
@@ -54,6 +55,22 @@ namespace IcarusNetFrontend_Winforms
 
                     FileStartAddress = startaddr
                 };
+            }
+            set
+            {
+                cbAddressingPreference.Items.Clear();
+
+                foreach (string s in Enum.GetNames(typeof(AssemblerConfig.OperandLengthOption)))
+                    cbAddressingPreference.Items.Add(s);
+
+                cbAddressingPreference.SelectedItem = cbAddressingPreference.Items.OfType<object>().Where(o => o.ToString() == value.OperandLength.ToString()).First();
+                rbFilesize.Checked = value.ReallocateIfOutOfBounds;
+                txtStartAddr.Text = "0x" + Convert.ToString(value.FileStartAddress, 16);
+                try
+                {
+                    this.ProjectEditorComponent.Assembler.Config = value;
+                }
+                catch (NullReferenceException) { }
             }
         }
 
@@ -110,24 +127,34 @@ namespace IcarusNetFrontend_Winforms
 
         void textboxToAssembler()
         {
+            ProjectEditorComponent.Assembler.Config = this.Config;
             ProjectEditorComponent.Assembler.Text = txtInputAssembly.Text;
             try
             {
+                progressBar1.Value = 0;
                 ProjectEditorComponent.Assembler.FirstPass();
+                progressBar1.Value = 50;
                 ProjectEditorComponent.Assembler.Assemble(true);
+                progressBar1.Value = 100;
                 lblErrorOutput.Text = "";
             }
-            catch (Exception ex)
+            catch (Assembler6502Net.SyntaxErrorException ex)
             {
                 lblErrorOutput.Text = ex.ToString();
+                throw ex;
             }
-
-            refreshLineNumberDocks();
+            finally
+            {
+                refreshLineNumberDocks();
+            }
+            
         }
 
         void assemblerToTextbox()
         {
             txtInputAssembly.Text = ProjectEditorComponent.Assembler.Text;
+
+            Config = ProjectEditorComponent.Assembler.Config;
         }
 
         string setHexStringFromLineNo(int lineno)
@@ -202,15 +229,6 @@ namespace IcarusNetFrontend_Winforms
             this.txtLineNumbers.LineTextSetter = setTextFromLineNo;
             this.txtHexValues.LineTextSetter = setHexStringFromLineNo;
 
-            foreach (string s in Enum.GetNames(typeof(AssemblerConfig.OperandLengthOption)))
-                cbAddressingPreference.Items.Add(s);
-
-            cbAddressingPreference.SelectedItem = cbAddressingPreference.Items.OfType<object>().Where(
-                o => o.ToString() == this.ProjectEditorComponent.Assembler.Config.OperandLength.ToString()
-            ).First();
-
-            rbFilesize.Checked = this.ProjectEditorComponent.Assembler.Config.ReallocateIfOutOfBounds;
-            txtStartAddr.Text = "0x" + Convert.ToString(this.ProjectEditorComponent.Assembler.Config.FileStartAddress, 16);
         }
         public AssemblyFileForm()
         {
@@ -224,14 +242,14 @@ namespace IcarusNetFrontend_Winforms
                 case Keys.Enter:
                 case Keys.Up:
                 case Keys.Down:
-                    textboxToAssembler();
+                    queueTextboxToAssembler();
                     break;
             }
         }
 
         private void txtInputAssembly_Leave(object sender, EventArgs e)
         {
-            textboxToAssembler();
+            queueTextboxToAssembler();
         }
 
         private void AssemblyFileForm_Move(object sender, EventArgs e)
@@ -285,6 +303,43 @@ namespace IcarusNetFrontend_Winforms
             catch (NullReferenceException) 
             {
                 MessageBox.Show("Null ref");
+            }
+        }
+
+        //can't use lock on a bool
+        class AssemblePending
+        {
+            public bool Value = false;
+        }
+
+        AssemblePending assembleIsPending = new AssemblePending();
+
+        void queueTextboxToAssembler()
+        {
+            lock (assembleIsPending)
+            {
+                assembleIsPending.Value = true;
+            }
+        }
+
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                bool doAssemble;
+                lock (assembleIsPending)
+                {
+                    doAssemble = assembleIsPending.Value;
+                    if (assembleIsPending.Value)
+                    {
+                        assembleIsPending.Value = false;
+                    }
+                }
+                if (doAssemble)
+                {
+                    textboxToAssembler();
+                }
+
             }
         }
     }

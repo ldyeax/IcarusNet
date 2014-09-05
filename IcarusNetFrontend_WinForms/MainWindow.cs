@@ -431,19 +431,12 @@ namespace IcarusNetFrontend_Winforms
 
         #region toolstrip
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var newprojectform = new NewProjectForm();
-            newprojectform.FormClosing += newprojectform_FormClosing;
-            newprojectform.Show();
-        }
-
         private void toolstrip_open_Click(object sender, EventArgs e)
         {
-            OpenProject = Project.Load(getEvents(), @"C:\users\user\icarproj\hope");
-            return;
+            //OpenProject = Project.Load(getEvents(), @"C:\users\user\icarproj\hope");
+            //return;
 
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            FolderBrowserDialog dialog = new FolderBrowserDialog(){ SelectedPath = ProjectLocations.ProjectsDir };
             var result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
@@ -524,7 +517,9 @@ namespace IcarusNetFrontend_Winforms
 
         private void toolstrip_new_Click(object sender, EventArgs e)
         {
-
+            var newprojectform = new NewProjectForm();
+            newprojectform.FormClosing += newprojectform_FormClosing;
+            newprojectform.Show();
         }
 
         private void toolstrip_help_Click(object sender, EventArgs e)

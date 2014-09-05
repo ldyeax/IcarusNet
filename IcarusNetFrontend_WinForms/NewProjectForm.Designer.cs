@@ -56,7 +56,6 @@
             this.txtCreateUnder.Name = "txtCreateUnder";
             this.txtCreateUnder.Size = new System.Drawing.Size(342, 20);
             this.txtCreateUnder.TabIndex = 1;
-            this.txtCreateUnder.Text = "c:\\icarproj";
             // 
             // label1
             // 
@@ -82,7 +81,7 @@
             this.txtProjectName.Name = "txtProjectName";
             this.txtProjectName.Size = new System.Drawing.Size(342, 20);
             this.txtProjectName.TabIndex = 4;
-            this.txtProjectName.Text = "project";
+            this.txtProjectName.Text = "MyNewProject";
             // 
             // label3
             // 
@@ -99,7 +98,6 @@
             this.txtInputFile.Name = "txtInputFile";
             this.txtInputFile.Size = new System.Drawing.Size(342, 20);
             this.txtInputFile.TabIndex = 6;
-            this.txtInputFile.Text = "c:\\icarproj\\cleanrom.bin";
             // 
             // txtOutputFileName
             // 
@@ -107,7 +105,7 @@
             this.txtOutputFileName.Name = "txtOutputFileName";
             this.txtOutputFileName.Size = new System.Drawing.Size(342, 20);
             this.txtOutputFileName.TabIndex = 8;
-            this.txtOutputFileName.Text = "modifiedrom.bin";
+            this.txtOutputFileName.Text = "MyNewProjectRom.nes";
             // 
             // label4
             // 
@@ -147,6 +145,7 @@
             this.Controls.Add(this.btnCreate);
             this.Name = "NewProjectForm";
             this.Text = "NewProjectForm";
+            this.Load += new System.EventHandler(this.NewProjectForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

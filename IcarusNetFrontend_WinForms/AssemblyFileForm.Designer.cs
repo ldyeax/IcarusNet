@@ -39,6 +39,8 @@
             this.rbFilesize = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
             this.cbAddressingPreference = new System.Windows.Forms.ComboBox();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // txtInputAssembly
@@ -215,11 +217,24 @@
             this.cbAddressingPreference.Size = new System.Drawing.Size(121, 21);
             this.cbAddressingPreference.TabIndex = 24;
             // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(591, 13);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 25;
+            // 
             // AssemblyFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 496);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.cbAddressingPreference);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.rbFilesize);
@@ -256,5 +271,7 @@
         private System.Windows.Forms.RadioButton rbFilesize;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cbAddressingPreference;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
