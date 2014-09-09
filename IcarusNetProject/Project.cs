@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading;
 
 using Assembler6502Net;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ namespace IcarusNetProject
         const string projectFileName = "project." + FileExtension;
         static JsonSerializerSettings jsonSettings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
 
+        [JsonIgnore]
         string _oldcwd;
         void setCWD()
         {
@@ -77,6 +79,7 @@ namespace IcarusNetProject
             setCWD();
 
             Events.PreSave();
+            ;
             File.WriteAllText(PathToProjectFile, JsonConvert.SerializeObject(this, jsonSettings));
             Events.Saved();
 
@@ -85,6 +88,10 @@ namespace IcarusNetProject
 
         private List<Component> components = new List<Component>();
         public Settings Settings = new Settings();
+
+
+        [JsonIgnore]
+        public bool Building = false;
 
         [JsonIgnore]
         public string PathToDirectory
@@ -141,6 +148,8 @@ namespace IcarusNetProject
 
         public void Build()
         {
+            Building = true;
+
             setCWD();
 
             Bytes = File.ReadAllBytes(Settings.InputFile);
@@ -149,9 +158,20 @@ namespace IcarusNetProject
             components.Sort();
 
             foreach (Component c in components)
-                c.PreBuild();
+            {
+                lock(c)
+                {
+                    c.PreBuild();
+                }
+            }
             foreach (Component c in components)
-                c.Build(this);
+            {
+                lock(c)
+                {
+                    c.Build(this);
+                }
+            }
+                
 
             File.WriteAllBytes(Settings.OutputFile, Bytes);
 
@@ -160,6 +180,8 @@ namespace IcarusNetProject
             Save();
 
             revertCWD();
+
+            Building = false;
         }
 
 

@@ -12,6 +12,7 @@ namespace IcarusNetFrontend_Winforms
         public static string IcarusNetDir;
         public static string RomsDir;
         public static string ExampleRomFile;
+        public static string SettingsFile;
 
         /// <summary>
         /// Use like:
@@ -40,6 +41,11 @@ namespace IcarusNetFrontend_Winforms
                 Array.Copy(writeOver, exampleRomBytes, writeOver.Length);
 
                 File.WriteAllBytes(ExampleRomFile, exampleRomBytes);
+            }
+
+            if (!File.Exists(SettingsFile = Path.Combine(IcarusNetDir, "settings.json")))
+            {
+                File.WriteAllText(SettingsFile, "{}");
             }
         }
     }

@@ -9,7 +9,29 @@ namespace Assembler6502Net
     {
         static string formatLine(string line)
         {
-            return line.Replace('\t', ' ').Trim().Split(';')[0];
+            string ret = line.Replace('\t', ' ').Trim();
+            int? commentMarkerLocation = null;
+            bool inQuotes = false;
+            for (int i = ret.Length - 1; i >= 0; i--)
+            {
+                if (ret[i] == '"')
+                {
+                    inQuotes = !inQuotes;
+                    continue;
+                }
+
+                if (!inQuotes && ret[i] == ';')
+                {
+                    commentMarkerLocation = i;
+                }
+            }
+
+            if (commentMarkerLocation != null)
+            {
+                ret = ret.Substring(0, commentMarkerLocation.Value);
+            }
+
+            return ret;
         }
 
         //static ushort getNumb
@@ -18,6 +40,7 @@ namespace Assembler6502Net
         const string numerals = "1234567890";
         const string hexchars = "abcdefABCDEF1234567890";
 
+        public Directive Directive = null;
         public string Label = null;
         public Assembly.OpCode? OpCode = null;
         public Assembly.AddressingMethod? AddressingMethod = null;
@@ -25,7 +48,7 @@ namespace Assembler6502Net
         public KeyValuePair<string, string>? VariableAssignment = null;
         public ushort PC;
 
-        public List<byte> ComputedBytes = new List<byte>();
+        public List<byte> ComputedBytes = null;
 
         public Line() { }
 
@@ -74,6 +97,32 @@ namespace Assembler6502Net
                 VariableAssignment = new KeyValuePair<string, string>(lvalue, rvalue);
                 return;
             }
+
+            if (line.StartsWith("."))
+            {
+                string directiveName = line.Split(' ')[0];
+                line = line.Substring(directiveName.Length + 1, line.Length - (directiveName.Length + 1));
+                line = formatLine(line);
+
+                if (line.StartsWith("\""))
+                {
+                    line = line.Substring(1, line.Length - 2);
+                    //for (int i = 0; i < line.Length; ++i)
+                    //{
+                    //    if (line[i] == '"')
+                    //    {
+                    //        line = line.Substring(1, i - 1);
+                    //        break;
+                    //    }
+                    //}
+                }
+
+                this.Directive = new Directive(directiveName.Substring(1, directiveName.Length - 1), line);
+                
+
+                return;
+            }
+
             if (line.Length < 3)
                 throw new SyntaxErrorException(lineno, "Line length less than 3");
 
@@ -106,16 +155,18 @@ namespace Assembler6502Net
         /// <param name="variables"></param>
         public bool ResolveVariables(IDictionary<string, string> variables)
         {
-            if (this.RValue == null)
-                return true;
-
             //branches and jumps can use variables, not just labels
             //so those have to be checked for here because it will later be assumed that the variables were already filled in
             foreach (var varname in variables.Keys)
             {
-                if (RValue.ValueMiddle == varname)
+                if (this.RValue != null && RValue.ValueMiddle == varname)
                 {
                     RValue.ValueMiddle = variables[varname];
+                    return true;
+                }
+                if (this.Directive != null && this.Directive.RawArgumentWithoutQuotes == varname)
+                {
+                    Directive.RawArgumentWithoutQuotes = variables[varname];
                     return true;
                 }
             }
@@ -230,9 +281,14 @@ namespace Assembler6502Net
         {
             foreach (var label in labels.Keys)
             {
-                if (RValue.ValueMiddle == label)
+                if (RValue != null && RValue.ValueMiddle == label)
                 {
                     RValue.ValueMiddle = "$" + Convert.ToString(labels[label], 16);
+                    return true;
+                }
+                if (Directive != null && Directive.RawArgumentWithoutQuotes == label)
+                {
+                    Directive.RawArgumentWithoutQuotes = "$" + Convert.ToString(labels[label], 16);
                     return true;
                 }
             }
@@ -272,7 +328,12 @@ namespace Assembler6502Net
         /// <param name="assembler"></param>
         public void ResolveLabelsAndAssembleSecondPass(Assembler assembler, int lineno)
         {
-            if (this.AddressingMethod.Value == Assembly.AddressingMethod.implied)
+            if (this.VariableAssignment != null)
+            {
+                return;
+            }
+
+            if (this.AddressingMethod != null && this.AddressingMethod.Value == Assembly.AddressingMethod.implied)
             {
                 //no work to do
                 finishResolveLabelsAndAssembleSecondPass();
@@ -282,9 +343,46 @@ namespace Assembler6502Net
 
             if (!resolveLabels(assembler.Labels) && assembler.AssemblerGroup != null)
                 resolveLabels(assembler.AssemblerGroup.Labels);
-            
 
-            this.RValue.ParseValue(this.OpCode.Value, this.AddressingMethod.Value, PC);
+            if (this.Directive != null)
+            {
+                this.ComputedBytes = new List<byte>();
+
+                this.Directive.ParseValue();
+                if (this.Directive.Bytes != null)
+                {
+                    this.ComputedBytes = this.Directive.Bytes.ToList();
+                    return;
+                }
+
+                int n = this.Directive.ComputedValue.GetNumeral();
+                switch (this.Directive.Type)
+                {
+                    case DirectiveType.@byte:
+
+                        if (n < 0)
+                            n = Assembly.TwosComplement8bit(n);
+
+                        if (n < byte.MinValue || n > byte.MaxValue)
+                            throw new SyntaxErrorException("Value out of range for byte");
+
+                        ComputedBytes.Add((byte)n);
+                        return;
+                    case DirectiveType.word:
+                        if (n < 0 || n > ushort.MaxValue)
+                            throw new SyntaxErrorException("Value out of range for word");
+
+                        foreach (byte b in Assembly.UshortToLE((ushort)n))
+                        {
+                            ComputedBytes.Add(b);
+                        }
+                        return;
+                }
+                throw new SyntaxErrorException("Unspecified error with directive");
+            }
+
+            if (this.RValue != null)
+                this.RValue.ParseValue(this.OpCode.Value, this.AddressingMethod.Value, PC);
 
             //Label searching and value setting done - now only concerned with determining the addressing method
 
@@ -295,7 +393,7 @@ namespace Assembler6502Net
                 return;
             }
 
-            throw new SyntaxErrorException(lineno, "End of second pass reached without finding an addressing method");
+            //throw new SyntaxErrorException(lineno, "End of second pass reached without finding an addressing method");
         }
     }
 }

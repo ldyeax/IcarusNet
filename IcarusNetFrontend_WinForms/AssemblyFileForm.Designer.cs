@@ -31,16 +31,18 @@
             this.txtInputAssembly = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtOrder = new System.Windows.Forms.TextBox();
-            this.txtLineNumbers = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers();
+            this.txtLineNumbers = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers ();
             this.lblErrorOutput = new System.Windows.Forms.Label();
-            this.txtHexValues = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers();
+            this.txtHexValues = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers ();
             this.txtStartAddr = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.rbFilesize = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
             this.cbAddressingPreference = new System.Windows.Forms.ComboBox();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnHelp = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtInputAssembly
@@ -52,11 +54,12 @@
             this.txtInputAssembly.HideSelection = false;
             this.txtInputAssembly.Location = new System.Drawing.Point(110, 41);
             this.txtInputAssembly.Name = "txtInputAssembly";
-            this.txtInputAssembly.Size = new System.Drawing.Size(586, 377);
+            this.txtInputAssembly.Size = new System.Drawing.Size(441, 377);
             this.txtInputAssembly.TabIndex = 9;
             this.txtInputAssembly.Text = "";
             this.txtInputAssembly.SizeChanged += new System.EventHandler(this.txtInputAssembly_SizeChanged);
             this.txtInputAssembly.TextChanged += new System.EventHandler(this.txtInputAssembly_TextChanged);
+            this.txtInputAssembly.Enter += new System.EventHandler(this.bringToFrontEvent);
             this.txtInputAssembly.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtInputAssembly_KeyUp);
             this.txtInputAssembly.Leave += new System.EventHandler(this.txtInputAssembly_Leave);
             this.txtInputAssembly.Resize += new System.EventHandler(this.txtInputAssembly_Resize);
@@ -64,7 +67,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-2, 14);
+            this.label1.Location = new System.Drawing.Point(-1, -1);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(36, 13);
             this.label1.TabIndex = 11;
@@ -72,7 +75,7 @@
             // 
             // txtOrder
             // 
-            this.txtOrder.Location = new System.Drawing.Point(41, 14);
+            this.txtOrder.Location = new System.Drawing.Point(42, -1);
             this.txtOrder.Name = "txtOrder";
             this.txtOrder.Size = new System.Drawing.Size(26, 20);
             this.txtOrder.TabIndex = 12;
@@ -91,7 +94,7 @@
             this.txtLineNumbers.BorderLines_Color = System.Drawing.Color.SlateGray;
             this.txtLineNumbers.BorderLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
             this.txtLineNumbers.BorderLines_Thickness = 1F;
-            this.txtLineNumbers.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Left;
+            this.txtLineNumbers.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Left;
             this.txtLineNumbers.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLineNumbers.GridLines_Color = System.Drawing.Color.SlateGray;
             this.txtLineNumbers.GridLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
@@ -105,7 +108,7 @@
             this.txtLineNumbers.Location = new System.Drawing.Point(-2, 41);
             this.txtLineNumbers.Margin = new System.Windows.Forms.Padding(0);
             this.txtLineNumbers.MarginLines_Color = System.Drawing.Color.SlateGray;
-            this.txtLineNumbers.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
+            this.txtLineNumbers.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
             this.txtLineNumbers.MarginLines_Style = System.Drawing.Drawing2D.DashStyle.Solid;
             this.txtLineNumbers.MarginLines_Thickness = 1F;
             this.txtLineNumbers.Name = "txtLineNumbers";
@@ -128,7 +131,7 @@
             this.lblErrorOutput.Location = new System.Drawing.Point(12, 425);
             this.lblErrorOutput.Margin = new System.Windows.Forms.Padding(0);
             this.lblErrorOutput.Name = "lblErrorOutput";
-            this.lblErrorOutput.Size = new System.Drawing.Size(747, 62);
+            this.lblErrorOutput.Size = new System.Drawing.Size(602, 62);
             this.lblErrorOutput.TabIndex = 14;
             this.lblErrorOutput.Text = "(Output)";
             // 
@@ -144,7 +147,7 @@
             this.txtHexValues.BorderLines_Color = System.Drawing.Color.SlateGray;
             this.txtHexValues.BorderLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
             this.txtHexValues.BorderLines_Thickness = 1F;
-            this.txtHexValues.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
+            this.txtHexValues.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
             this.txtHexValues.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtHexValues.GridLines_Color = System.Drawing.Color.SlateGray;
             this.txtHexValues.GridLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
@@ -155,10 +158,10 @@
             this.txtHexValues.LineNrs_ClippedByItemRectangle = true;
             this.txtHexValues.LineNrs_LeadingZeroes = true;
             this.txtHexValues.LineNrs_Offset = new System.Drawing.Size(0, 0);
-            this.txtHexValues.Location = new System.Drawing.Point(697, 41);
+            this.txtHexValues.Location = new System.Drawing.Point(552, 41);
             this.txtHexValues.Margin = new System.Windows.Forms.Padding(0);
             this.txtHexValues.MarginLines_Color = System.Drawing.Color.SlateGray;
-            this.txtHexValues.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
+            this.txtHexValues.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
             this.txtHexValues.MarginLines_Style = System.Drawing.Drawing2D.DashStyle.Solid;
             this.txtHexValues.MarginLines_Thickness = 1F;
             this.txtHexValues.Name = "txtHexValues";
@@ -178,16 +181,16 @@
             this.txtStartAddr.Name = "txtStartAddr";
             this.txtStartAddr.Size = new System.Drawing.Size(136, 20);
             this.txtStartAddr.TabIndex = 20;
-            this.txtStartAddr.Text = "0";
+            this.txtStartAddr.Text = "10";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(107, -1);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 13);
+            this.label2.Size = new System.Drawing.Size(130, 13);
             this.label2.TabIndex = 19;
-            this.label2.Text = "File starting address:";
+            this.label2.Text = "File offset (eg. for header):";
             // 
             // rbFilesize
             // 
@@ -221,20 +224,42 @@
             // 
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             // 
-            // progressBar1
+            // label4
             // 
-            this.progressBar1.Location = new System.Drawing.Point(591, 13);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBar1.TabIndex = 25;
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(91, 18);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(18, 13);
+            this.label4.TabIndex = 25;
+            this.label4.Text = "0x";
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHelp.Location = new System.Drawing.Point(539, 8);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(75, 23);
+            this.btnHelp.TabIndex = 26;
+            this.btnHelp.Text = "Help";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(14, 23);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(54, 13);
+            this.label5.TabIndex = 27;
+            this.label5.Text = "File : NES";
             // 
             // AssemblyFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(768, 496);
-            this.Controls.Add(this.progressBar1);
+            this.ClientSize = new System.Drawing.Size(623, 496);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.btnHelp);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.cbAddressingPreference);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.rbFilesize);
@@ -249,7 +274,7 @@
             this.Name = "AssemblyFileForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "AssemblyFileForm";
+            this.Text = " ";
             this.Load += new System.EventHandler(this.AssemblyFileForm_Load);
             this.ResizeEnd += new System.EventHandler(this.AssemblyFileForm_ResizeEnd);
             this.Move += new System.EventHandler(this.AssemblyFileForm_Move);
@@ -263,15 +288,17 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtOrder;
         private System.Windows.Forms.RichTextBox txtInputAssembly;
-        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtLineNumbers;
+        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtLineNumbers;
         private System.Windows.Forms.Label lblErrorOutput;
-        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtHexValues;
+        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtHexValues;
         private System.Windows.Forms.TextBox txtStartAddr;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RadioButton rbFilesize;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cbAddressingPreference;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.Label label5;
     }
 }

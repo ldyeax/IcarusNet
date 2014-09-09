@@ -17,6 +17,9 @@ namespace IcarusNetFrontend_Winforms
     [IcarusNetComponent(typeof(IcarusNetProject.Components.AssemblyEditor))]
     public partial class AssemblyFileForm : Form, IProjectComponentForm
     {
+        #region variables
+
+        //Thread workerThread;
 
         public AssemblerConfig Config
         {
@@ -25,19 +28,12 @@ namespace IcarusNetFrontend_Winforms
                 uint startaddr = 0;
                 try
                 {
-                    startaddr = Convert.ToUInt32(txtStartAddr.Text);
+                    startaddr = Convert.ToUInt32(txtStartAddr.Text, 16);
                 }
                 catch (FormatException)
                 {
-                    try
-                    {
-                        startaddr = Convert.ToUInt32(txtStartAddr.Text, 16);
-                    }
-                    catch (FormatException)
-                    {
-                        startaddr = 0;
-                        MessageBox.Show("Invalid starting address");
-                    }
+                    startaddr = 0;
+                    txtStartAddr.BackColor = Color.Red;
                 }
 
                 return new AssemblerConfig()
@@ -65,7 +61,7 @@ namespace IcarusNetFrontend_Winforms
 
                 cbAddressingPreference.SelectedItem = cbAddressingPreference.Items.OfType<object>().Where(o => o.ToString() == value.OperandLength.ToString()).First();
                 rbFilesize.Checked = value.ReallocateIfOutOfBounds;
-                txtStartAddr.Text = "0x" + Convert.ToString(value.FileStartAddress, 16);
+                txtStartAddr.Text = Convert.ToString(value.FileStartAddress, 16);
                 try
                 {
                     this.ProjectEditorComponent.Assembler.Config = value;
@@ -89,9 +85,12 @@ namespace IcarusNetFrontend_Winforms
                     this.Text = _projectEditorComponent.Name;
                     //textboxToAssembler();
                     assemblerToTextbox();
+                    this.Config = _projectEditorComponent.Config;
                 }
             }
         }
+
+        #endregion
 
         #region overrides
 
@@ -108,8 +107,8 @@ namespace IcarusNetFrontend_Winforms
             this.Width = ProjectEditorComponent.Width;
             this.Height = ProjectEditorComponent.Height;
 
-            component.PreBuild += textboxToAssembler;
-            component.PreSave += textboxToAssembler;
+            component.PreBuild += () => { textboxToAssembler(true, false); };
+            component.PreSave += () => { textboxToAssembler(true); };
         }
 
         public IcarusNetProject.Components.Component GetComponent()
@@ -119,34 +118,61 @@ namespace IcarusNetFrontend_Winforms
 
         #endregion
 
+        #region assorted methods
+
         void refreshLineNumberDocks()
         {
+            ;
             this.txtLineNumbers.Refresh();
             this.txtHexValues.Refresh();
         }
 
-        void textboxToAssembler()
+        void _invoke(Action a)
         {
-            ProjectEditorComponent.Assembler.Config = this.Config;
-            ProjectEditorComponent.Assembler.Text = txtInputAssembly.Text;
+            this.Invoke((MethodInvoker)delegate
+            {
+                a();
+            });
+        }
+
+        void textboxToAssembler(bool doBuild = true, bool firstPassOnly = false)
+        {
+            _invoke(() =>
+            {
+                ProjectEditorComponent.Assembler.Config = this.Config;
+                ProjectEditorComponent.Assembler.Text = txtInputAssembly.Text;
+            });
+
+            if (!doBuild)
+                return;
+
             try
             {
-                progressBar1.Value = 0;
                 ProjectEditorComponent.Assembler.FirstPass();
-                progressBar1.Value = 50;
-                ProjectEditorComponent.Assembler.Assemble(true);
-                progressBar1.Value = 100;
-                lblErrorOutput.Text = "";
+                if (!firstPassOnly)
+                    ProjectEditorComponent.Assembler.Assemble(true);
+
+                _invoke(() =>
+                {
+                    lblErrorOutput.Text = "";
+                });
+
+                
             }
             catch (Assembler6502Net.SyntaxErrorException ex)
             {
-                lblErrorOutput.Text = ex.ToString();
-                throw ex;
+                
+                _invoke(() =>
+                {
+                    lblErrorOutput.Text = ex.ToString() + Environment.NewLine + ex.StackTrace;
+                });
+
+                //throw ex
             }
             finally
             {
-                refreshLineNumberDocks();
-            }
+                _invoke(refreshLineNumberDocks);
+            };
             
         }
 
@@ -174,7 +200,7 @@ namespace IcarusNetFrontend_Winforms
             {
                 Line line = this.ProjectEditorComponent.Assembler.Lines[lineno];
 
-                if (line == null)
+                if (line == null || line.ComputedBytes == null)
                 {
                     return linenostr;
                 }
@@ -217,7 +243,76 @@ namespace IcarusNetFrontend_Winforms
             return linenostr;
         }
 
-        //Generated code
+        void assembleLoop()
+        {
+            //return;
+            int t = 0;
+
+            while (true)
+            {
+                //Console.WriteLine((t++).ToString());
+
+                try
+                {
+
+                    System.Threading.Thread.Sleep(100);
+
+
+                    if (ProjectEditorComponent == null || ProjectEditorComponent.Project == null || ProjectEditorComponent.Project.Building)
+                    {
+                        //Monitor.Exit(this.ProjectEditorComponent);
+                        continue;
+                    }
+
+                    //if (Monitor.TryEnter(this.ProjectEditorComponent))
+                    lock(this.ProjectEditorComponent)
+                    {
+                        //_invoke(() => { this.Text = "1"; });
+
+                        textboxToAssembler();
+                        //_invoke(() => { this.Text = "2"; });
+                        //Monitor.Exit(this.ProjectEditorComponent);
+                        continue;
+                    }
+
+
+
+                    //pointless, just do it regardless every 100ms, cheap enough
+                    /*
+                    t++;
+                    _invoke(() => { this.Text = t.ToString(); });
+                    
+                    bool doAssemble;
+                    lock (assembleIsPending)
+                    {
+                        doAssemble = assembleIsPending.Value;
+
+                        if (assembleIsPending.Value)
+                        {
+                            assembleIsPending.Value = false;
+                        }
+                    }
+                    if (doAssemble)
+                    {
+                        textboxToAssembler();
+
+                    }
+                    */
+
+                }
+                catch (Exception ex)
+                {
+
+                    //return;
+                    _invoke(() => { this.Text = ex.Message; });
+                    //MessageBox.Show(ex.Message);
+                };
+            }
+        }
+
+        #endregion
+
+        #region generated
 
         private void txtOrder_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -229,6 +324,15 @@ namespace IcarusNetFrontend_Winforms
             this.txtLineNumbers.LineTextSetter = setTextFromLineNo;
             this.txtHexValues.LineTextSetter = setHexStringFromLineNo;
 
+            backgroundWorker.RunWorkerAsync();
+
+            foreach (var ctrl in this.Controls)
+            {
+                ((Control)ctrl).Enter += bringToFrontEvent;
+                ((Control)ctrl).Click += bringToFrontEvent;
+            }
+            //workerThread = new Thread(new ThreadStart(assembleLoop));
+            //workerThread.Start();
         }
         public AssemblyFileForm()
         {
@@ -242,14 +346,14 @@ namespace IcarusNetFrontend_Winforms
                 case Keys.Enter:
                 case Keys.Up:
                 case Keys.Down:
-                    queueTextboxToAssembler();
+                    //queueTextboxToAssembler();
                     break;
             }
         }
 
         private void txtInputAssembly_Leave(object sender, EventArgs e)
         {
-            queueTextboxToAssembler();
+            //queueTextboxToAssembler();
         }
 
         private void AssemblyFileForm_Move(object sender, EventArgs e)
@@ -284,7 +388,7 @@ namespace IcarusNetFrontend_Winforms
 
         private void txtInputAssembly_TextChanged(object sender, EventArgs e)
         {
-            //ProjectEditorComponent.Assembler.Text = txtInputAssembly.Text;
+            //queueTextboxToAssembler();
         }
 
         private void btnConfig_Click(object sender, EventArgs e)
@@ -302,45 +406,20 @@ namespace IcarusNetFrontend_Winforms
             }
             catch (NullReferenceException) 
             {
-                MessageBox.Show("Null ref");
-            }
-        }
-
-        //can't use lock on a bool
-        class AssemblePending
-        {
-            public bool Value = false;
-        }
-
-        AssemblePending assembleIsPending = new AssemblePending();
-
-        void queueTextboxToAssembler()
-        {
-            lock (assembleIsPending)
-            {
-                assembleIsPending.Value = true;
+                MessageBox.Show(this.ParentForm, "Null ref");
             }
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (true)
-            {
-                bool doAssemble;
-                lock (assembleIsPending)
-                {
-                    doAssemble = assembleIsPending.Value;
-                    if (assembleIsPending.Value)
-                    {
-                        assembleIsPending.Value = false;
-                    }
-                }
-                if (doAssemble)
-                {
-                    textboxToAssembler();
-                }
+            assembleLoop();
+        }
 
-            }
+        #endregion
+
+        private void bringToFrontEvent(object sender, EventArgs e)
+        {
+            this.BringToFront();
         }
     }
 }

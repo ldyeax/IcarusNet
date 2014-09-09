@@ -50,8 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembler.cs" />
+    <Compile Include="AssemblerConfig.cs" />
     <Compile Include="AssemblerGroup.cs" />
     <Compile Include="Assembly.cs" />
+    <Compile Include="ComputedValueResult.cs" />
+    <Compile Include="Directive.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

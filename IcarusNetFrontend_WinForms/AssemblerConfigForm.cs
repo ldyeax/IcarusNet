@@ -38,7 +38,7 @@ namespace IcarusNetFrontend_Winforms
                     catch (FormatException)
                     {
                         startaddr = 0;
-                        MessageBox.Show("Invalid starting address");
+                        MessageBox.Show(this.ParentForm, "Invalid starting address");
                     }
                 }
 

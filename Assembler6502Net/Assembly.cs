@@ -24,6 +24,91 @@ namespace Assembler6502Net
             return b;
         }
 
+        public static Dictionary<char, int> BaseIdentifiers = new Dictionary<char, int>()
+            {
+                {'$', 16},
+                {'%', 2},
+                {'0', 8}
+            };
+
+        public static ComputedValueResult NumeralFromFormattedLiteralString(string literalString)
+        {
+
+            ComputedValueResult ComputedValue = new ComputedValueResult();
+
+            if (literalString.StartsWith("-"))
+            {
+                ComputedValue.MakeNegative = true;
+                literalString = literalString.Substring(1, literalString.Length - 1);
+            }
+
+            ComputedValue.Literal = literalString.StartsWith("#");
+
+            bool found = false;
+
+            foreach (char identifier in BaseIdentifiers.Keys)
+            {
+                //Console.WriteLine(identifier.ToString());
+                bool check = literalString[0] == identifier;
+                if (literalString.Length > 1)
+                    check = check || literalString[1] == identifier;
+
+                if (check)
+                {
+                    ComputedValue.ValueString = literalString.Split(identifier)[1];
+
+                    if (identifier == '0' && ComputedValue.ValueString.Length == 0)
+                    {
+                        ComputedValue.ValueString = "0";
+                        ComputedValue.Base = 10;
+
+                        found = true;
+                        break;
+                    }
+
+                    ComputedValue.Base = BaseIdentifiers[identifier];
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                ComputedValue.ValueString = literalString;
+                if (ComputedValue.Literal)
+                {
+                    ComputedValue.ValueString = ComputedValue.ValueString.Substring(1, ComputedValue.ValueString.Length - 1);
+                }
+                ComputedValue.Base = 10;
+            }
+
+            //if (ComputedValue.Literal)
+            //    ComputedValue.ValueString = ComputedValue.ValueString.Substring(1, ComputedValue.ValueString.Length - 1);
+
+            if (ComputedValue.ValueString.StartsWith("-"))
+            {
+                ComputedValue.ValueString = ComputedValue.ValueString.Substring(1, ComputedValue.ValueString.Length - 1);
+                ComputedValue.MakeNegative = true;
+            }
+
+
+            return ComputedValue;
+        }
+
+        public static ushort TwosComplement8bit(int n)
+        {
+            if (n < sbyte.MinValue)
+                throw new SyntaxErrorException("Negative value out of range for byte");
+            if (n >= 0)
+                throw new InvalidOperationException("Attempt to use twosComplement8bit on nonnegative");
+            n *= -1;
+            n = ((byte)n) ^ byte.MaxValue;
+
+            n++;
+
+            return (ushort)n;
+        }
+
+
         public static Dictionary<AddressingMethod, ushort> AddressingMethodLength = new Dictionary<AddressingMethod, ushort>();
 
         static Assembly()

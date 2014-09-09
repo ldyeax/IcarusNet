@@ -48,6 +48,11 @@
             this.toolstrip_help = new System.Windows.Forms.MenuItem();
             this.toolstrip_about = new System.Windows.Forms.MenuItem();
             this.txtOutput = new System.Windows.Forms.TextBox();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // btnAddAssembler
@@ -126,6 +131,7 @@
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1,
+            this.menuItem4,
             this.menuItem2,
             this.menuItem3});
             // 
@@ -161,7 +167,7 @@
             // 
             // menuItem2
             // 
-            this.menuItem2.Index = 1;
+            this.menuItem2.Index = 2;
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.toolstrip_build,
             this.toolstrip_buildAndRun,
@@ -190,7 +196,7 @@
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 2;
+            this.menuItem3.Index = 3;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.toolstrip_help,
             this.toolstrip_about});
@@ -219,6 +225,36 @@
             this.txtOutput.Size = new System.Drawing.Size(959, 45);
             this.txtOutput.TabIndex = 21;
             // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 1;
+            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem5,
+            this.menuItem6,
+            this.menuItem7,
+            this.menuItem8});
+            this.menuItem4.Text = "Project";
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 0;
+            this.menuItem5.Text = "New Assembly Source";
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 1;
+            this.menuItem6.Text = "Generate Header/Footer Assembly Source";
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 2;
+            this.menuItem7.Text = "Add IPS File";
+            // 
+            // menuItem8
+            // 
+            this.menuItem8.Index = 3;
+            this.menuItem8.Text = "Add Existing Assembly Source";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -235,6 +271,7 @@
             this.Menu = this.mainMenu1;
             this.Name = "MainWindow";
             this.Text = "IcarusNet";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainWindow_KeyDown);
             this.ResumeLayout(false);
@@ -263,6 +300,11 @@
         private System.Windows.Forms.MenuItem toolstrip_about;
         private System.Windows.Forms.TextBox txtOutput;
         private System.Windows.Forms.MenuItem toolstrip_buildOptions;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem menuItem5;
+        private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem menuItem7;
+        private System.Windows.Forms.MenuItem menuItem8;
     }
 }
 

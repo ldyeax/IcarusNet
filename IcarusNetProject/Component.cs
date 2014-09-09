@@ -22,7 +22,7 @@ namespace IcarusNetProject.Components
         public int Y = 0;
         public int Width = 600;
         public int Height = 400;
-        public int ExecutionOrder = 0;
+        public int BuildOrder = 0;
         public WindowState WindowState = WindowState.Normal;
         public string Name = null;
 
@@ -46,7 +46,7 @@ namespace IcarusNetProject.Components
 
         public int CompareTo(Component other)
         {
-            return other.ExecutionOrder - this.ExecutionOrder;
+            return other.BuildOrder - this.BuildOrder;
         }
     }
 }

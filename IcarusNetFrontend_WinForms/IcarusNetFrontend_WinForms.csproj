@@ -50,9 +50,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ref\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RichTextBoxWithLineNumbers">
-      <HintPath>ref\RichTextBoxWithLineNumbers.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -83,6 +80,7 @@
       <DependentUpon>HexEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="IcarusNetComponentAttribute.cs" />
+    <Compile Include="IcarusNetSettings.cs" />
     <Compile Include="IProjectComponentForm.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -95,6 +93,12 @@
     </Compile>
     <Compile Include="NewProjectForm.Designer.cs">
       <DependentUpon>NewProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenProjectForm.Designer.cs">
+      <DependentUpon>OpenProjectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProjectLocations.cs" />
@@ -113,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NewProjectForm.resx">
       <DependentUpon>NewProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenProjectForm.resx">
+      <DependentUpon>OpenProjectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -143,6 +150,10 @@
     <ProjectReference Include="..\IcarusNetProject\IcarusNetProject.csproj">
       <Project>{9309d72d-809b-468f-96e9-dd58b01d3bf3}</Project>
       <Name>IcarusNetProject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LineNumbers\RichTextBoxWithLineNumbers\RichTextBoxWithLineNumbers.vbproj">
+      <Project>{18664f07-01d8-43f3-bbaa-841b2ce010e8}</Project>
+      <Name>RichTextBoxWithLineNumbers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

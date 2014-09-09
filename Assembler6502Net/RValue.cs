@@ -7,18 +7,6 @@ namespace Assembler6502Net
 {
     public class RValue
     {
-        public class ComputedValueResult
-        {
-            /// <summary>
-            /// Only the part that can be given to Convert.ToInt32
-            /// </summary>
-            public string ValueString = null;
-            public ushort Result;
-            public int Base = -1;
-            public bool Literal;
-            public bool Finished = false;
-            public bool MakeNegative = false;
-        }
 
         /// <summary>
         /// whitespace already removed
@@ -80,39 +68,6 @@ namespace Assembler6502Net
             };
 
 
-        int getNumeral()
-        {
-            try
-            {
-                int ret = Convert.ToInt32(
-                    ComputedValue.ValueString,
-                    ComputedValue.Base
-                );
-                if (ComputedValue.MakeNegative)
-                    ret *= -1;
-                //throw new Exception("Got the number: " + ComputedValue.ValueString);
-                return ret;
-            }
-            catch (FormatException ex)
-            {
-                throw new FormatException("Error parsing '" + ComputedValue.ValueString + "' in base " + ComputedValue.Base + ": " + ex.Message, ex);
-            }
-
-        }
-
-        ushort twosComplement8bit(int n)
-        {
-            if (n < sbyte.MinValue)
-                throw new SyntaxErrorException("Negative value out of range for byte");
-            if (n >= 0)
-                throw new InvalidOperationException("Attempt to use twosComplement8bit on nonnegative");
-            n *= -1;
-            n = ((byte)n) ^ byte.MaxValue;
-
-            n++;
-
-            return (ushort)n;
-        }
 
         /// <summary>
         /// only for instructions that don't use labels or from within other setValue()
@@ -121,7 +76,7 @@ namespace Assembler6502Net
         {
             if (nval < 0)
             {
-                nval = twosComplement8bit(nval);
+                nval = Assembly.TwosComplement8bit(nval);
             }
 
             if (nval > ushort.MaxValue)
@@ -143,7 +98,7 @@ namespace Assembler6502Net
             int nval = 0;
             try
             {
-                nval = getNumeral();
+                nval = ComputedValue.GetNumeral();
             }
             catch (FormatException ex)
             {
@@ -155,7 +110,7 @@ namespace Assembler6502Net
 
             if (nval < 0)
             {
-                nval = twosComplement8bit(nval);
+                nval = Assembly.TwosComplement8bit(nval);
             }
 
             if (nval > ushort.MaxValue)
@@ -233,7 +188,7 @@ namespace Assembler6502Net
                 return;
 
             parseValue();
-            setValue(getNumeral());
+            setValue(ComputedValue.GetNumeral());
         }
 
         /// <summary>

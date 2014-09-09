@@ -19,8 +19,12 @@ namespace IcarusNetFrontend_Winforms
 {
     public partial class MainWindow : Form
     {
+        #region command-line arguments
+
+        #endregion
+
         #region variables
-        
+
         Project OpenProject
         {
             get
@@ -31,7 +35,6 @@ namespace IcarusNetFrontend_Winforms
             {
                 _openProject = value;
 
-                
                 setGrayedOut();
 
                 if (value == null)
@@ -41,7 +44,7 @@ namespace IcarusNetFrontend_Winforms
                 else
                 {
                     repopulateComponentSelectors();
-                    pnlComponentZoo.Controls.Clear();
+
                     var fi = new FileInfo(_openProject.PathToProjectFile);
                     this.Text = "IcarusNet " + fi.Name + ": " + fi.Directory.FullName;
                 }
@@ -67,39 +70,38 @@ namespace IcarusNetFrontend_Winforms
         private void MainWindow_Load(object sender, EventArgs e)
         {
             this.OpenProject = null;
+
+            IcarusNetSettings.Load();
+
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length != 1)
+            {
+                var dir = new FileInfo(args[1]).Directory.FullName;
+                OpenProjectFromPath(dir);
+            }
+
             //setGrayedOut();
             //tabsTop.Enabled = true;
             //tabsTop.Visible = tabsTop.TabPages.Count != 0;
             //Application.AddMessageFilter()
         }
 
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            IcarusNetSettings.Save();
+        }
+
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            //return;
+            if (e.Control && e.Shift && e.KeyCode == Keys.O)
+            {
+                if (IcarusNetSettings.Instance.LastOpenProjectPath != null)
+                    OpenProjectFromPath(IcarusNetSettings.Instance.LastOpenProjectPath);
+                else
+                    MessageBox.Show(this, "There is no most recently opened project available.");
+            }
 
-            //if (e.KeyCode == Keys.F5)
-            //{
-            //    toolstrip_buildAndRun.PerformClick();
-            //    e.Handled = true;
-            //    return;
-            //}
-
-            //if (e.Control)
-            //{
-            //    switch (e.KeyCode)
-            //    {
-            //        case Keys.O:
-            //            {
-            //                toolstrip_open.PerformClick();
-            //                break;
-            //            }
-            //        case Keys.S:
-            //            {
-            //                toolstrip_saveProject.PerformClick();
-            //                break;
-            //            }
-            //    }
-            //}
+            return;
         }
 
 
@@ -107,6 +109,14 @@ namespace IcarusNetFrontend_Winforms
 
         #region helping methods
 
+        public void OpenProjectFromPath(string path)
+        {
+            pnlComponentZoo.Controls.Clear();
+            nameToComponentForm.Clear();
+
+            OpenProject = Project.Load(getEvents(), path);
+            IcarusNetSettings.Instance.LastOpenProjectPath = path;
+        }
 
         void setMessage(string msg)
         {
@@ -436,12 +446,20 @@ namespace IcarusNetFrontend_Winforms
             //OpenProject = Project.Load(getEvents(), @"C:\users\user\icarproj\hope");
             //return;
 
-            FolderBrowserDialog dialog = new FolderBrowserDialog(){ SelectedPath = ProjectLocations.ProjectsDir };
-            var result = dialog.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
+            using (OpenProjectForm openProjectForm = new OpenProjectForm())
             {
-                OpenProject = Project.Load(getEvents(), dialog.SelectedPath);
+                openProjectForm.FormClosing += openProjectForm_FormClosing;
+                openProjectForm.ShowDialog(this);
             }
+
+            return;
+        }
+
+        void openProjectForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var frm = (OpenProjectForm)sender;
+            if (frm.OpenProjectPath != null)
+                OpenProjectFromPath(frm.OpenProjectPath);
         }
 
         private void _toolstrip_save_Click(object sender, EventArgs e)
@@ -463,7 +481,7 @@ namespace IcarusNetFrontend_Winforms
         private void toolstrip_saveProject_Click(object sender, EventArgs e)
         {
             if (OpenProject == null)
-                return;
+                MessageBox.Show(this, "No open project to save.");
 
             OpenProject.Save();
             setMessage("Project saved");
@@ -495,6 +513,7 @@ namespace IcarusNetFrontend_Winforms
                 return;
             try
             {
+                setMessage("Initiating build..");
                 OpenProject.Build();
                 setMessage("Build successful. Running post-run command.");
                 System.Diagnostics.Process.Start(Path.Combine( Application.StartupPath, "fceux", "fceux.exe") , OpenProject.PathToOutputFile);
@@ -507,7 +526,7 @@ namespace IcarusNetFrontend_Winforms
 
         private void toolstrip_about_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Alpha version of 6502 IDE. Assembles correctly as far as I know.\nLDYEAX@gmail.com");
+            MessageBox.Show(this, "Alpha version of 6502 IDE. Assembles correctly as far as I know.\nLDYEAX@gmail.com");
         }
 
         private void toolstrip_options_Click(object sender, EventArgs e)
@@ -528,5 +547,6 @@ namespace IcarusNetFrontend_Winforms
         }
 
         #endregion
+
     }
 }

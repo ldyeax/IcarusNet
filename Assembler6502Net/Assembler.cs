@@ -7,18 +7,6 @@ using System.Reflection;
 
 namespace Assembler6502Net
 {
-    public class AssemblerConfig
-    {
-        public enum OperandLengthOption
-        {
-            Smallest,
-            Longest,
-            AsWritten
-        }
-        public OperandLengthOption OperandLength = OperandLengthOption.AsWritten;
-        public bool ReallocateIfOutOfBounds = false;
-        public uint FileStartAddress = 0;
-    }
 
     public class Assembler
     {
@@ -77,7 +65,18 @@ namespace Assembler6502Net
         /// </summary>
         public SortedDictionary<string, string> Variables = new SortedDictionary<string, string>(new VariableComperer());
 
-        public Line[] Lines;
+        private Line[] _lines;
+        public Line[] Lines 
+        { 
+            get 
+            { 
+                return _lines; 
+            } 
+            set 
+            { 
+                _lines = value; 
+            } 
+        }
         bool didFirstPass = false;
         int currentReadingLine = -1;
 
@@ -149,6 +148,10 @@ namespace Assembler6502Net
                                 throw new SyntaxErrorException(currentReadingLine, "Out of space on line");
                         }
                 }
+                else if (line.Directive != null)
+                {
+                    pc += (ushort)line.Directive.LengthInBytes;
+                }
 
             }
 
@@ -175,17 +178,17 @@ namespace Assembler6502Net
                 Line line = Lines[currentReadingLine];
                 ushort pc = line.PC;
 
-                if (line.OpCode != null)
-                {
-                    line.ResolveLabelsAndAssembleSecondPass(this, currentReadingLine);
+                line.ResolveLabelsAndAssembleSecondPass(this, currentReadingLine);
 
+                if (line.ComputedBytes != null)
+                {
                     if (!facade)
                     {
-                        this.Bytes[Config.FileStartAddress + pc] = Assembly.OpcodeTable[line.OpCode.Value][line.AddressingMethod.Value];
+                        //this.Bytes[Config.FileStartAddress + pc] = Assembly.OpcodeTable[line.OpCode.Value][line.AddressingMethod.Value];
 
                         for (int j = 0; j < line.ComputedBytes.Count; ++j)
                         {
-                            this.Bytes[pc + Config.FileStartAddress + j + 1] = line.ComputedBytes[j];
+                            this.Bytes[pc + Config.FileStartAddress + j] = line.ComputedBytes[j];
                         }
                     }
                 }
@@ -200,8 +203,8 @@ namespace Assembler6502Net
             //If debugging, let the debugger catch it
             if (System.Diagnostics.Debugger.IsAttached)
             {
-            //    act();
-            //    return;
+             //   act();
+             //   return;
             }
 
             try
