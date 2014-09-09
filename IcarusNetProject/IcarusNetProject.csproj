@@ -58,6 +58,7 @@
     <Compile Include="FileComponent.cs" />
     <Compile Include="HexEditor.cs" />
     <Compile Include="IPSPatcher.cs" />
+    <Compile Include="NES.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

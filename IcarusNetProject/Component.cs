@@ -27,6 +27,8 @@ namespace IcarusNetProject.Components
         public string Name = null;
 
         [JsonIgnore]
+        public Action PropertyChangedOutsideNormalView = () => { };
+        [JsonIgnore]
         public Action PreSave = () => { };
         [JsonIgnore]
         public Action PreBuild = () => { };
@@ -46,7 +48,7 @@ namespace IcarusNetProject.Components
 
         public int CompareTo(Component other)
         {
-            return other.BuildOrder - this.BuildOrder;
+            return this.BuildOrder - other.BuildOrder;
         }
     }
 }

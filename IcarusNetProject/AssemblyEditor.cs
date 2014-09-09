@@ -16,7 +16,7 @@ namespace IcarusNetProject.Components
         {
             OperandLength = AssemblerConfig.OperandLengthOption.AsWritten,
             ReallocateIfOutOfBounds = false,
-            FileStartAddress = 0xD00F
+            FileStartAddress = 0x10
         };
 
         public AssemblerConfig Config
@@ -59,6 +59,7 @@ namespace IcarusNetProject.Components
 
             if (!File.Exists(FilePath))
                 File.Create(FilePath).Close();
+
             this.Name = new FileInfo(FilePath).Name;
             this.Assembler = new Assembler(this.Config) { Text = File.ReadAllText(FilePath) };
 

@@ -369,14 +369,66 @@ namespace IcarusNetFrontend_Winforms
             return nameToComponentForm[lbProjectControls.SelectedItem.ToString()];
         }
 
+        void swapControlBuildOrders(IcarusNetProject.Components.Component ctrlToLower, IcarusNetProject.Components.Component ctrlToIncrease)
+        {
+            if (ctrlToLower.BuildOrder == ctrlToIncrease.BuildOrder)
+            {
+                ctrlToIncrease.BuildOrder++;
+            }
+
+            int oldToLowerOrder = ctrlToLower.BuildOrder;
+            ctrlToLower.BuildOrder = ctrlToIncrease.BuildOrder;
+            ctrlToIncrease.BuildOrder = oldToLowerOrder;
+
+            ctrlToLower.PropertyChangedOutsideNormalView();
+            ctrlToIncrease.PropertyChangedOutsideNormalView();
+
+            repopulateComponentSelectors();
+        }
+
         private void btnUp_Click(object sender, EventArgs e)
         {
+            if (OpenProject == null)
+                return;
+            if (lbProjectControls.SelectedItem == null)
+            {
+                MessageBox.Show(this, "No item selected");
+                return;
+            }
 
+            if (lbProjectControls.SelectedIndex == 0)
+            {
+                MessageBox.Show(this, "Component is already first");
+                return;
+            }
+
+            var ctrlToLower = ((IProjectComponentForm)nameToComponentForm[(string)(lbProjectControls.SelectedItem)]).GetComponent();
+            var ctrlToIncrease = ((IProjectComponentForm)nameToComponentForm[(string)(lbProjectControls.Items[lbProjectControls.SelectedIndex - 1])]).GetComponent();
+
+            swapControlBuildOrders(ctrlToLower, ctrlToIncrease);
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
+            if (OpenProject == null)
+                return;
+            if (lbProjectControls.SelectedItem == null)
+            {
+                MessageBox.Show(this, "No item selected");
+                return;
+            }
 
+            if (lbProjectControls.SelectedIndex == lbProjectControls.Items.Count - 1)
+            {
+                MessageBox.Show(this, "Component is already last");
+                return;
+            }
+
+            var ctrlToIncrease = ((IProjectComponentForm)nameToComponentForm[(string)(lbProjectControls.SelectedItem)]).GetComponent();
+            var ctrlToLower = ((IProjectComponentForm)nameToComponentForm[(string)(lbProjectControls.Items[lbProjectControls.SelectedIndex + 1])]).GetComponent();
+
+
+            swapControlBuildOrders(ctrlToLower, ctrlToIncrease);
         }
 
         private void lbProjectControls_MouseDown(object sender, MouseEventArgs e)
@@ -403,14 +455,7 @@ namespace IcarusNetFrontend_Winforms
 
         private void btnAddAssembler_Click(object sender, EventArgs e)
         {
-            if (OpenProject == null)
-                return;
 
-            string newname = Microsoft.VisualBasic.Interaction.InputBox("Name:");
-            if (!newname.EndsWith(".s"))
-                newname += ".s";
-
-            OpenProject.AddComponent(new AssemblyEditor() { FilePath = newname });
         }
 
 
@@ -546,7 +591,46 @@ namespace IcarusNetFrontend_Winforms
             
         }
 
+        #region toolstrip item: Project
+
+        private void toolstrip_newAssemblySource_Click(object sender, EventArgs e)
+        {
+            if (OpenProject == null)
+                return;
+
+            string newname = Microsoft.VisualBasic.Interaction.InputBox("Name:");
+            if (!newname.EndsWith(".s"))
+                newname += ".s";
+
+            OpenProject.AddComponent(new AssemblyEditor() { FilePath = newname });
+        }
+
+
+        private void toolstrip_addExistingAssemblySource_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, "Not implemented");
+        }
+
+
+        private void toolstrip_addIPS_Click(object sender, EventArgs e)
+        {
+            if (OpenProject == null)
+                return;
+
+            OpenProject.AddComponent(new IcarusNetProject.Components.IPSPatcher());
+        }
         #endregion
+
+        private void toolstrip_generateHeaderFooterAssemblySource_Click(object sender, EventArgs e)
+        {
+            if (OpenProject == null)
+                return;
+            OpenProject.GenerateHeaderAndFooterAssemblySources();
+        }
+
+        #endregion
+
+
 
     }
 }

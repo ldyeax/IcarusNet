@@ -135,9 +135,13 @@ namespace IcarusNetProject
 
         public void AddComponent(Component component)
         {
+            setCWD();
+
             component.Initialize(this);
             this.components.Add(component);
             Events.ComponentAdded(component);
+
+            revertCWD();
         }
 
         public void RemoveComponent(Component component)
@@ -201,6 +205,22 @@ namespace IcarusNetProject
             }
 
             revertCWD();
+        }
+
+
+
+        public void GenerateHeaderAndFooterAssemblySources()
+        {
+            string headername = "icarusnet_generated_header.s";
+
+            setCWD();
+
+            NES.Header header = new NES.Header(File.ReadAllBytes(Settings.InputFile));
+            File.WriteAllText(headername, header.GetAssemblySource());
+
+            revertCWD();
+
+            AddComponent(new AssemblyEditor() { FilePath = headername });
         }
     }
 }

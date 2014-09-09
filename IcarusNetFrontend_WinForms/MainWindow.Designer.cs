@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnAddAssembler = new System.Windows.Forms.Button();
             this.lbProjectControls = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.pnlComponentZoo = new System.Windows.Forms.Panel();
@@ -40,6 +38,11 @@
             this.toolstrip_new = new System.Windows.Forms.MenuItem();
             this.toolstrip_open = new System.Windows.Forms.MenuItem();
             this.toolstrip_saveProject = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.toolstrip_newAssemblySource = new System.Windows.Forms.MenuItem();
+            this.toolstrip_generateHeaderFooterAssemblySource = new System.Windows.Forms.MenuItem();
+            this.toolstrip_addIPS = new System.Windows.Forms.MenuItem();
+            this.toolstrip_addExistingAssemblySource = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.toolstrip_build = new System.Windows.Forms.MenuItem();
             this.toolstrip_buildAndRun = new System.Windows.Forms.MenuItem();
@@ -48,24 +51,7 @@
             this.toolstrip_help = new System.Windows.Forms.MenuItem();
             this.toolstrip_about = new System.Windows.Forms.MenuItem();
             this.txtOutput = new System.Windows.Forms.TextBox();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
-            // 
-            // btnAddAssembler
-            // 
-            this.btnAddAssembler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddAssembler.Location = new System.Drawing.Point(971, 584);
-            this.btnAddAssembler.Name = "btnAddAssembler";
-            this.btnAddAssembler.Size = new System.Drawing.Size(126, 23);
-            this.btnAddAssembler.TabIndex = 11;
-            this.btnAddAssembler.Tag = "NeedOpenProject";
-            this.btnAddAssembler.Text = "New Assembly Source";
-            this.btnAddAssembler.UseVisualStyleBackColor = true;
-            this.btnAddAssembler.Click += new System.EventHandler(this.btnAddAssembler_Click);
             // 
             // lbProjectControls
             // 
@@ -74,28 +60,17 @@
             this.lbProjectControls.FormattingEnabled = true;
             this.lbProjectControls.Location = new System.Drawing.Point(971, 7);
             this.lbProjectControls.Name = "lbProjectControls";
-            this.lbProjectControls.Size = new System.Drawing.Size(126, 498);
+            this.lbProjectControls.Size = new System.Drawing.Size(126, 576);
             this.lbProjectControls.TabIndex = 16;
             this.lbProjectControls.Tag = "NeedOpenProject";
             this.lbProjectControls.SelectedIndexChanged += new System.EventHandler(this.lbProjectControls_SelectedIndexChanged);
             this.lbProjectControls.DoubleClick += new System.EventHandler(this.lbProjectControls_DoubleClick);
             this.lbProjectControls.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbProjectControls_MouseDown);
             // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(971, 555);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(126, 23);
-            this.button1.TabIndex = 17;
-            this.button1.Tag = "NeedOpenProject";
-            this.button1.Text = "Add Existing File";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // btnUp
             // 
             this.btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUp.Location = new System.Drawing.Point(971, 516);
+            this.btnUp.Location = new System.Drawing.Point(971, 584);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(63, 23);
             this.btnUp.TabIndex = 18;
@@ -107,7 +82,7 @@
             // btnDown
             // 
             this.btnDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDown.Location = new System.Drawing.Point(1034, 516);
+            this.btnDown.Location = new System.Drawing.Point(1034, 584);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(63, 23);
             this.btnDown.TabIndex = 19;
@@ -164,6 +139,40 @@
             this.toolstrip_saveProject.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
             this.toolstrip_saveProject.Text = "Save";
             this.toolstrip_saveProject.Click += new System.EventHandler(this.toolstrip_saveProject_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 1;
+            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.toolstrip_newAssemblySource,
+            this.toolstrip_generateHeaderFooterAssemblySource,
+            this.toolstrip_addIPS,
+            this.toolstrip_addExistingAssemblySource});
+            this.menuItem4.Text = "Project";
+            // 
+            // toolstrip_newAssemblySource
+            // 
+            this.toolstrip_newAssemblySource.Index = 0;
+            this.toolstrip_newAssemblySource.Text = "New Assembly Source";
+            this.toolstrip_newAssemblySource.Click += new System.EventHandler(this.toolstrip_newAssemblySource_Click);
+            // 
+            // toolstrip_generateHeaderFooterAssemblySource
+            // 
+            this.toolstrip_generateHeaderFooterAssemblySource.Index = 1;
+            this.toolstrip_generateHeaderFooterAssemblySource.Text = "Generate Header/Footer Assembly Source";
+            this.toolstrip_generateHeaderFooterAssemblySource.Click += new System.EventHandler(this.toolstrip_generateHeaderFooterAssemblySource_Click);
+            // 
+            // toolstrip_addIPS
+            // 
+            this.toolstrip_addIPS.Index = 2;
+            this.toolstrip_addIPS.Text = "Add IPS File";
+            this.toolstrip_addIPS.Click += new System.EventHandler(this.toolstrip_addIPS_Click);
+            // 
+            // toolstrip_addExistingAssemblySource
+            // 
+            this.toolstrip_addExistingAssemblySource.Index = 3;
+            this.toolstrip_addExistingAssemblySource.Text = "Add Existing Assembly Source";
+            this.toolstrip_addExistingAssemblySource.Click += new System.EventHandler(this.toolstrip_addExistingAssemblySource_Click);
             // 
             // menuItem2
             // 
@@ -225,36 +234,6 @@
             this.txtOutput.Size = new System.Drawing.Size(959, 45);
             this.txtOutput.TabIndex = 21;
             // 
-            // menuItem4
-            // 
-            this.menuItem4.Index = 1;
-            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem5,
-            this.menuItem6,
-            this.menuItem7,
-            this.menuItem8});
-            this.menuItem4.Text = "Project";
-            // 
-            // menuItem5
-            // 
-            this.menuItem5.Index = 0;
-            this.menuItem5.Text = "New Assembly Source";
-            // 
-            // menuItem6
-            // 
-            this.menuItem6.Index = 1;
-            this.menuItem6.Text = "Generate Header/Footer Assembly Source";
-            // 
-            // menuItem7
-            // 
-            this.menuItem7.Index = 2;
-            this.menuItem7.Text = "Add IPS File";
-            // 
-            // menuItem8
-            // 
-            this.menuItem8.Index = 3;
-            this.menuItem8.Text = "Add Existing Assembly Source";
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -264,9 +243,7 @@
             this.Controls.Add(this.pnlComponentZoo);
             this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnUp);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.lbProjectControls);
-            this.Controls.Add(this.btnAddAssembler);
             this.KeyPreview = true;
             this.Menu = this.mainMenu1;
             this.Name = "MainWindow";
@@ -281,9 +258,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnAddAssembler;
         private System.Windows.Forms.ListBox lbProjectControls;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Panel pnlComponentZoo;
@@ -301,10 +276,10 @@
         private System.Windows.Forms.TextBox txtOutput;
         private System.Windows.Forms.MenuItem toolstrip_buildOptions;
         private System.Windows.Forms.MenuItem menuItem4;
-        private System.Windows.Forms.MenuItem menuItem5;
-        private System.Windows.Forms.MenuItem menuItem6;
-        private System.Windows.Forms.MenuItem menuItem7;
-        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem toolstrip_newAssemblySource;
+        private System.Windows.Forms.MenuItem toolstrip_generateHeaderFooterAssemblySource;
+        private System.Windows.Forms.MenuItem toolstrip_addIPS;
+        private System.Windows.Forms.MenuItem toolstrip_addExistingAssemblySource;
     }
 }
 
