@@ -31,9 +31,9 @@
             this.txtInputAssembly = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtOrder = new System.Windows.Forms.TextBox();
-            this.txtLineNumbers = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers ();
+            this.txtLineNumbers = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers();
             this.lblErrorOutput = new System.Windows.Forms.Label();
-            this.txtHexValues = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers ();
+            this.txtHexValues = new RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers();
             this.txtStartAddr = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.rbFilesize = new System.Windows.Forms.RadioButton();
@@ -94,8 +94,8 @@
             this.txtLineNumbers.BorderLines_Color = System.Drawing.Color.SlateGray;
             this.txtLineNumbers.BorderLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
             this.txtLineNumbers.BorderLines_Thickness = 1F;
-            this.txtLineNumbers.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Left;
-            this.txtLineNumbers.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLineNumbers.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Left;
+            this.txtLineNumbers.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLineNumbers.GridLines_Color = System.Drawing.Color.SlateGray;
             this.txtLineNumbers.GridLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
             this.txtLineNumbers.GridLines_Thickness = 1F;
@@ -108,7 +108,7 @@
             this.txtLineNumbers.Location = new System.Drawing.Point(-2, 41);
             this.txtLineNumbers.Margin = new System.Windows.Forms.Padding(0);
             this.txtLineNumbers.MarginLines_Color = System.Drawing.Color.SlateGray;
-            this.txtLineNumbers.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
+            this.txtLineNumbers.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
             this.txtLineNumbers.MarginLines_Style = System.Drawing.Drawing2D.DashStyle.Solid;
             this.txtLineNumbers.MarginLines_Thickness = 1F;
             this.txtLineNumbers.Name = "txtLineNumbers";
@@ -147,8 +147,8 @@
             this.txtHexValues.BorderLines_Color = System.Drawing.Color.SlateGray;
             this.txtHexValues.BorderLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
             this.txtHexValues.BorderLines_Thickness = 1F;
-            this.txtHexValues.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
-            this.txtHexValues.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtHexValues.DockSide = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
+            this.txtHexValues.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtHexValues.GridLines_Color = System.Drawing.Color.SlateGray;
             this.txtHexValues.GridLines_Style = System.Drawing.Drawing2D.DashStyle.Dot;
             this.txtHexValues.GridLines_Thickness = 1F;
@@ -161,7 +161,7 @@
             this.txtHexValues.Location = new System.Drawing.Point(552, 41);
             this.txtHexValues.Margin = new System.Windows.Forms.Padding(0);
             this.txtHexValues.MarginLines_Color = System.Drawing.Color.SlateGray;
-            this.txtHexValues.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
+            this.txtHexValues.MarginLines_Side = RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.LineNumberDockSide.Right;
             this.txtHexValues.MarginLines_Style = System.Drawing.Drawing2D.DashStyle.Solid;
             this.txtHexValues.MarginLines_Thickness = 1F;
             this.txtHexValues.Name = "txtHexValues";
@@ -246,11 +246,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(14, 23);
+            this.label5.Location = new System.Drawing.Point(15, 30);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(54, 13);
+            this.label5.Size = new System.Drawing.Size(80, 13);
             this.label5.TabIndex = 27;
-            this.label5.Text = "File : NES";
+            this.label5.Text = "ROM Addr : PC";
             // 
             // AssemblyFileForm
             // 
@@ -288,9 +288,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtOrder;
         private System.Windows.Forms.RichTextBox txtInputAssembly;
-        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtLineNumbers;
+        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtLineNumbers;
         private System.Windows.Forms.Label lblErrorOutput;
-        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtHexValues;
+        private RichTextBoxWithLineNumbers.RichTextBoxWithLineNumbers txtHexValues;
         private System.Windows.Forms.TextBox txtStartAddr;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RadioButton rbFilesize;

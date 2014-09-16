@@ -54,6 +54,7 @@
             this.txtFilePath.Name = "txtFilePath";
             this.txtFilePath.Size = new System.Drawing.Size(372, 20);
             this.txtFilePath.TabIndex = 1;
+            this.txtFilePath.TextChanged += new System.EventHandler(this.txtFilePath_TextChanged);
             // 
             // cbRelative
             // 

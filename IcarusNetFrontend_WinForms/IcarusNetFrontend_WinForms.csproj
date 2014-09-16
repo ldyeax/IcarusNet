@@ -82,6 +82,12 @@
     <Compile Include="IcarusNetComponentAttribute.cs" />
     <Compile Include="IcarusNetSettings.cs" />
     <Compile Include="IProjectComponentForm.cs" />
+    <Compile Include="IPSFileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IPSFileForm.Designer.cs">
+      <DependentUpon>IPSFileForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HexEditorForm.resx">
       <DependentUpon>HexEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IPSFileForm.resx">
+      <DependentUpon>IPSFileForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

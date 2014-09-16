@@ -65,8 +65,8 @@ namespace IcarusNetProject.Components
 
             project.AssemblerGroup.Add(Assembler);
             project.Events.Saved += SaveFile;
-            this.PreBuild += () => { preBuild(this.Project); };
-            this.PreSave += () => { this.Config = this.Assembler.Config; };
+            this.PreBuild += () => { preBuild(this.Project); return null; };
+            this.PreSave += () => { this.Config = this.Assembler.Config; return null; };
         }
 
         void preBuild(Project project)
@@ -75,11 +75,13 @@ namespace IcarusNetProject.Components
             this.Assembler.FirstPass();
         }
 
-        public override void Build(Project project)
+        public override string Build(Project project)
         {
             this.Assembler.Bytes = project.Bytes;
             SaveFile();
             this.Assembler.Assemble();
+
+            return null;
         }
 
         #endregion

@@ -28,7 +28,7 @@ namespace IcarusNetProject.Components
         //    throw new NotImplementedException();
         //}
 
-        public override void Build(Project project)
+        public override string Build(Project project)
         {
             throw new NotImplementedException();
         }

@@ -75,9 +75,11 @@ namespace IcarusNetProject.Components
             
         //}
 
-        public override void Build(Project project)
+        public override string Build(Project project)
         {
             Patch(project.Bytes, this.FilePath);
+
+            return null;
         }
 
 

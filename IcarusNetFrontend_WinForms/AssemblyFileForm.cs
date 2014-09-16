@@ -11,6 +11,7 @@ using System.Threading;
 using Assembler6502Net;
 
 using IcarusNetProject.Components;
+using RichTextBoxWithLineNumbers;
 
 namespace IcarusNetFrontend_Winforms
 {
@@ -107,8 +108,14 @@ namespace IcarusNetFrontend_Winforms
             this.Width = ProjectEditorComponent.Width;
             this.Height = ProjectEditorComponent.Height;
 
-            component.PreBuild += () => { textboxToAssembler(true, false); };
-            component.PreSave += () => { textboxToAssembler(true); };
+            component.PreBuild += () => { textboxToAssembler(true, false); return null; };
+            component.PreSave += () => { textboxToAssembler(true); return null; };
+
+            component.PropertyChangedOutsideNormalView += () =>
+            {
+                assemblerToTextbox();
+                this.txtOrder.Text = component.BuildOrder.ToString();
+            };
         }
 
         public IcarusNetProject.Components.Component GetComponent()
@@ -176,6 +183,11 @@ namespace IcarusNetFrontend_Winforms
             
         }
 
+        void componentToForm()
+        {
+
+        }
+
         void assemblerToTextbox()
         {
             txtInputAssembly.Text = ProjectEditorComponent.Assembler.Text;
@@ -183,16 +195,16 @@ namespace IcarusNetFrontend_Winforms
             Config = ProjectEditorComponent.Assembler.Config;
         }
 
-        string setHexStringFromLineNo(int lineno)
+        RichTextBoxWithLineNumbers.LineDrawArgs setHexStringFromLineNo(int lineno)
         {
-            string linenostr = "-";
+            LineDrawArgs ret = new LineDrawArgs() { Text = "-" };
 
             if (this.ProjectEditorComponent == null)
-                return linenostr;
+                return ret;
             if (this.ProjectEditorComponent.Assembler == null)
-                return linenostr;
+                return ret;
             if (this.ProjectEditorComponent.Assembler.Lines == null)
-                return linenostr;
+                return ret;
 
             lineno--;
 
@@ -202,25 +214,26 @@ namespace IcarusNetFrontend_Winforms
 
                 if (line == null || line.ComputedBytes == null)
                 {
-                    return linenostr;
+                    return ret;
                 }
 
-                return string.Join(" ", (from b in line.ComputedBytes select b.ToString("X2")).ToArray());
+                ret.Text = string.Join(" ", (from b in line.ComputedBytes select b.ToString("X2")).ToArray());
             }
 
-            return linenostr;
+            return ret;
         }
 
-        string setTextFromLineNo(int lineno)
+        RichTextBoxWithLineNumbers.LineDrawArgs setTextFromLineNo(int lineno)
         {
             string linenostr = lineno.ToString();
+            LineDrawArgs ret = new LineDrawArgs() { Text = linenostr };
 
             if (this.ProjectEditorComponent == null)
-                return linenostr;
+                return ret;
             if (this.ProjectEditorComponent.Assembler == null)
-                return linenostr;
+                return ret;
             if (this.ProjectEditorComponent.Assembler.Lines == null)
-                return linenostr;
+                return ret;
 
             lineno--;
 
@@ -230,23 +243,32 @@ namespace IcarusNetFrontend_Winforms
 
                 if (line == null)
                 {
-                    return linenostr;
+                    ret.BackColor = Color.Red;
+                    ret.ForeColor = Color.White;
+                    return ret;
                 }
 
-                return 
+                ret.Text = 
                     linenostr + " " + 
                     (line.PC + this.ProjectEditorComponent.Assembler.Config.FileStartAddress).ToString("X5") +
                     ":" +
                     line.PC.ToString("X4");
+                ret.ForeColor = Color.Blue;
+
+                if (line.ThrownException != null)
+                {
+                    ret.BackColor = Color.Red;
+                    ret.ForeColor = Color.White;
+                }
             }
 
-            return linenostr;
+            return ret;
         }
 
         void assembleLoop()
         {
             //return;
-            int t = 0;
+           // int t = 0;
 
             while (true)
             {
@@ -300,11 +322,11 @@ namespace IcarusNetFrontend_Winforms
                     */
 
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
 
                     //return;
-                    _invoke(() => { this.Text = ex.Message; });
+                    //_invoke(() => { this.Text = ex.Message; });
                     //MessageBox.Show(ex.Message);
                 };
             }

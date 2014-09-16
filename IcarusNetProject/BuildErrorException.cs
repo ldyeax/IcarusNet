@@ -7,5 +7,9 @@ namespace IcarusNetProject
 {
     public class BuildErrorException : Exception
     {
+        public BuildErrorException(Exception ex) : base(ex.Message, ex)
+        {
+
+        }
     }
 }

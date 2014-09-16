@@ -65,6 +65,7 @@
             this.lbProjectControls.Tag = "NeedOpenProject";
             this.lbProjectControls.SelectedIndexChanged += new System.EventHandler(this.lbProjectControls_SelectedIndexChanged);
             this.lbProjectControls.DoubleClick += new System.EventHandler(this.lbProjectControls_DoubleClick);
+            this.lbProjectControls.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbProjectControls_KeyDown);
             this.lbProjectControls.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbProjectControls_MouseDown);
             // 
             // btnUp
@@ -99,7 +100,7 @@
             this.pnlComponentZoo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlComponentZoo.Location = new System.Drawing.Point(0, 7);
             this.pnlComponentZoo.Name = "pnlComponentZoo";
-            this.pnlComponentZoo.Size = new System.Drawing.Size(959, 549);
+            this.pnlComponentZoo.Size = new System.Drawing.Size(959, 505);
             this.pnlComponentZoo.TabIndex = 20;
             // 
             // mainMenu1
@@ -227,12 +228,14 @@
             // 
             this.txtOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtOutput.Location = new System.Drawing.Point(0, 562);
+            this.txtOutput.Location = new System.Drawing.Point(0, 518);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ReadOnly = true;
-            this.txtOutput.Size = new System.Drawing.Size(959, 45);
+            this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtOutput.Size = new System.Drawing.Size(959, 89);
             this.txtOutput.TabIndex = 21;
+            this.txtOutput.TextChanged += new System.EventHandler(this.txtOutput_TextChanged);
             // 
             // MainWindow
             // 

@@ -9,5 +9,10 @@ namespace IcarusNetProject.Components
     {
         public string FilePath;
         public abstract void SaveFile();
+
+        public void FileNameToName()
+        {
+            this.Name = new System.IO.FileInfo(FilePath).Name;
+        }
     }
 }

@@ -52,7 +52,7 @@ namespace IcarusNetProject
             new Project() { 
                 Settings = settings,
                 PathToProjectFile = System.IO.Path.Combine(pathToDirectory, projectFileName)
-            }.Save();
+            }.SaveProject();
 
             return;
         }
@@ -74,16 +74,20 @@ namespace IcarusNetProject
             return ret;
         }
 
-        public void Save()
+        public void SaveProject()
         {
             setCWD();
 
             Events.PreSave();
-            ;
             File.WriteAllText(PathToProjectFile, JsonConvert.SerializeObject(this, jsonSettings));
             Events.Saved();
 
             revertCWD();
+        }
+
+        public void WriteToOutputFile()
+        {
+            File.WriteAllBytes(Settings.OutputFile, Bytes);
         }
 
         private List<Component> components = new List<Component>();
@@ -132,6 +136,14 @@ namespace IcarusNetProject
                 return components;
             }
         }
+        [JsonIgnore]
+        public IEnumerable<Component> Components
+        {
+            get
+            {
+                return this.components;
+            }
+        }
 
         public void AddComponent(Component component)
         {
@@ -150,42 +162,77 @@ namespace IcarusNetProject
             Events.ComponentRemoved(component);
         }
 
+        void buildOutput(string msg)
+        {
+            if (msg != null)
+                this.Events.OutputDuringBuild(msg + Environment.NewLine);
+            System.Threading.Thread.Sleep(100);
+        }
+
         public void Build()
         {
             Building = true;
 
             setCWD();
-
-            Bytes = File.ReadAllBytes(Settings.InputFile);
-
-            var components = this.components.ToList();
-            components.Sort();
-
-            foreach (Component c in components)
+            try
             {
-                lock(c)
+                Bytes = File.ReadAllBytes(Settings.InputFile);
+
+                var components = this.components.ToList();
+                components.Sort();
+
+                foreach (Component c in components)
                 {
-                    c.PreBuild();
+                    lock (c)
+                    {
+                        buildOutput("Pre-build <" + c.GetType().Name + "> " + c.Name);
+
+                        buildOutput(c.PreBuild());
+
+                        //if (c.Message != null)
+                            //this.Events.OutputDuringBuild(c.Message) + "\n";
+
+                        WriteToOutputFile();
+
+                        buildOutput("Success");
+
+                    }
+
                 }
+                foreach (Component c in components)
+                {
+                    lock (c)
+                    {
+                        buildOutput("Build <" + c.GetType().Name + "> " + c.Name);
+
+                        buildOutput(c.Build(this));
+
+                        WriteToOutputFile();
+
+                        buildOutput("Success");
+                    }
+                }
+
+                Events.BuildFinished();
+
+                buildOutput("Build finished.");
+
+                SaveProject();
+
+                buildOutput("Project saved.");
+
             }
-            foreach (Component c in components)
+            catch (Exception ex)
             {
-                lock(c)
-                {
-                    c.Build(this);
-                }
+                throw new BuildErrorException(ex);
             }
-                
+            finally
+            {
+                revertCWD();
 
-            File.WriteAllBytes(Settings.OutputFile, Bytes);
+                Building = false;
+            }
 
-            Events.BuildFinished();
-
-            Save();
-
-            revertCWD();
-
-            Building = false;
         }
 
 

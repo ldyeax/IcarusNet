@@ -36,6 +36,8 @@ namespace Assembler6502Net
 
         //static ushort getNumb
 
+        public SyntaxErrorException ThrownException = null;
+
         const string alphabet = "qwertuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
         const string numerals = "1234567890";
         const string hexchars = "abcdefABCDEF1234567890";

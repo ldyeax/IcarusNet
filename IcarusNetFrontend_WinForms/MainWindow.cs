@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
+using System.Threading;
+
 using System.Reflection;
 
 using IcarusNetProject;
@@ -52,7 +54,7 @@ namespace IcarusNetFrontend_Winforms
         }
         Project _openProject;
 
-        Dictionary<string, Form> nameToComponentForm = new Dictionary<string, Form>();
+        Dictionary<string, IProjectComponentForm> nameToComponentForm = new Dictionary<string, IProjectComponentForm>();
 
         //Dictionary<Form, TabPage> formToTabPage = new Dictionary<Form, TabPage>();
         //Dictionary<TabPage, Form> tabPageToForm = new Dictionary<TabPage, Form>();
@@ -88,6 +90,14 @@ namespace IcarusNetFrontend_Winforms
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+            try
+            {
+                //if (buildThread != null)
+                //    buildThread.Abort();
+                //while ( buildThread.IsAlive) ;
+            }
+            catch (Exception) { }
+
             IcarusNetSettings.Save();
         }
 
@@ -108,6 +118,14 @@ namespace IcarusNetFrontend_Winforms
         #endregion
 
         #region helping methods
+
+        void _invoke(Action act)
+        {
+            this.Invoke( new MethodInvoker(delegate
+            {
+                act();
+            }));
+        }
 
         public void OpenProjectFromPath(string path)
         {
@@ -178,10 +196,43 @@ namespace IcarusNetFrontend_Winforms
 
         #endregion
 
+        #region build thread
+
+        Thread buildThread;
+
+        void startBuildThread(Action afterBuild = null)
+        {
+            if (OpenProject == null)
+            {
+                MessageBox.Show(this, "Cannot start build thread with no open project");
+                return;
+            }
+
+            buildThread = new Thread(() =>
+            {
+                try
+                {
+                    OpenProject.Build();
+
+                    if (afterBuild != null)
+                        afterBuild();
+                }
+                catch (BuildErrorException ex)
+                {
+                    _invoke(() => { MessageBox.Show(this, "Build failed. See output for details." + Environment.NewLine + ex.Message); });
+                }
+
+            });
+
+            buildThread.Start();
+        }
+
+        #endregion
+
         #region components in the components panel
 
         #region tabs
-        
+
         //void processTab(Form form)
         //{
         //    TabPage tab = new TabPage(form.Text);
@@ -240,11 +291,12 @@ namespace IcarusNetFrontend_Winforms
             componentForm.GotFocus += componentForm_GotFocus;
             componentForm.VisibleChanged += componentForm_VisibleChanged;
 
-            nameToComponentForm.Add(component.Name, componentForm);
+            nameToComponentForm.Add(component.Name, (IProjectComponentForm) componentForm);
 
             component.PreSave += () =>
             {
                 component.WindowState = FormToIcarusWindowState(componentForm);
+                return null;
             };
 
             return;
@@ -322,10 +374,18 @@ namespace IcarusNetFrontend_Winforms
             var toRemove = pnlComponentZoo.Controls.OfType<Control>().Where(c => ((IProjectComponentForm)c).GetComponent() == component);
             if (toRemove.Count() != 0)
                 pnlComponentZoo.Controls.Remove(toRemove.First());
+            lbProjectControls.Items.Remove(component.Name);
         }
         void OnProjectBuildFinished()
         {
-            setMessage("Build finished successfully");
+            //setMessage("Build finished successfully");
+        }
+
+        void OnBuildOutput(string msg)
+        {
+            _invoke(() => {
+                txtOutput.Text += msg + Environment.NewLine;
+            });
         }
 
         ProjectEvents getEvents()
@@ -334,7 +394,8 @@ namespace IcarusNetFrontend_Winforms
             {
                 ComponentAdded = OnComponentAddedToProject,
                 ComponentRemoved = OnComponentRemovedFromProject,
-                BuildFinished = OnProjectBuildFinished
+                BuildFinished = OnProjectBuildFinished,
+                OutputDuringBuild = OnBuildOutput
             };
         }
 
@@ -366,7 +427,7 @@ namespace IcarusNetFrontend_Winforms
             if (lbProjectControls.SelectedItem == null)
                 return null;
 
-            return nameToComponentForm[lbProjectControls.SelectedItem.ToString()];
+            return (Form)nameToComponentForm[lbProjectControls.SelectedItem.ToString()];
         }
 
         void swapControlBuildOrders(IcarusNetProject.Components.Component ctrlToLower, IcarusNetProject.Components.Component ctrlToIncrease)
@@ -528,7 +589,7 @@ namespace IcarusNetFrontend_Winforms
             if (OpenProject == null)
                 MessageBox.Show(this, "No open project to save.");
 
-            OpenProject.Save();
+            OpenProject.SaveProject();
             setMessage("Project saved");
         }
 
@@ -540,33 +601,30 @@ namespace IcarusNetFrontend_Winforms
         private void toolstrip_build_Click(object sender, EventArgs e)
         {
             if (OpenProject == null)
+            {
+                MessageBox.Show(this, "Cannot build with no open project.");
                 return;
-            try
-            {
-                OpenProject.Build();
-                //setMessage("Build successful");
-            }//put this into a build error event
-            catch (BuildErrorException ex)
-            {
-                setMessage("Build error:\n" + ex.Message);
             }
+
+            setMessage("Starting build.");
+            startBuildThread();
         }
 
         private void toolstrip_buildAndRun_Click(object sender, EventArgs e)
         {
             if (OpenProject == null)
+            {
+                MessageBox.Show(this, "Cannot build with no open project.");
                 return;
-            try
-            {
-                setMessage("Initiating build..");
-                OpenProject.Build();
-                setMessage("Build successful. Running post-run command.");
-                System.Diagnostics.Process.Start(Path.Combine( Application.StartupPath, "fceux", "fceux.exe") , OpenProject.PathToOutputFile);
             }
-            catch (BuildErrorException ex)
-            {
-                setMessage("Build error:\n" + ex.Message);
-            }
+
+            setMessage("Starting build and run.");
+            startBuildThread(
+                () => {
+                    System.Diagnostics.Process.Start(Path.Combine(Application.StartupPath, "fceux", "fceux.exe"), OpenProject.PathToOutputFile);
+                }
+            );
+
         }
 
         private void toolstrip_about_Click(object sender, EventArgs e)
@@ -583,7 +641,7 @@ namespace IcarusNetFrontend_Winforms
         {
             var newprojectform = new NewProjectForm();
             newprojectform.FormClosing += newprojectform_FormClosing;
-            newprojectform.Show();
+            newprojectform.Show(this);
         }
 
         private void toolstrip_help_Click(object sender, EventArgs e)
@@ -630,7 +688,26 @@ namespace IcarusNetFrontend_Winforms
 
         #endregion
 
+        #region unsorted events
 
+        private void txtOutput_TextChanged(object sender, EventArgs e)
+        {
+            txtOutput.SelectionStart = txtOutput.Text.Length;
+            txtOutput.ScrollToCaret();
+        }
+
+        private void lbProjectControls_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (OpenProject == null)
+                return;
+            if (lbProjectControls.SelectedItem == null)
+                return;
+
+            if (e.KeyCode == Keys.Delete)
+                OpenProject.RemoveComponent(nameToComponentForm[lbProjectControls.SelectedItem.ToString()].GetComponent());
+        }
+
+        #endregion
 
     }
 }

@@ -83,5 +83,12 @@ namespace IcarusNetFrontend_Winforms
                 setText(txtFilePath.Text);
             }
         }
+
+        private void txtFilePath_TextChanged(object sender, EventArgs e)
+        {
+            this.icarusNetComponent.FilePath = txtFilePath.Text;
+
+            this.icarusNetComponent.FileNameToName();
+        }
     }
 }
