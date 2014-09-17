@@ -37,8 +37,11 @@ namespace IcarusNetProject.Components
             set
             {
                 _name = value;
-                while (Project.Components.Where(c => c.Name == _name).Count() != 1)
-                    _name += "_";
+                if (Project != null)
+                    while (Project.Components.Where(c => c.Name == _name).Count() != 1)
+                    {
+                        _name += "_";
+                    }
                 NameChanged(_name);
             }
         }

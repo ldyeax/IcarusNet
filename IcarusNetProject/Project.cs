@@ -17,7 +17,7 @@ namespace IcarusNetProject
     {
         public const string FileExtension = "icarusnet";
         const string projectFileName = "project." + FileExtension;
-        static JsonSerializerSettings jsonSettings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
+        static JsonSerializerSettings jsonSettings = new JsonSerializerSettings() { Formatting = Formatting.Indented,  };
 
         [JsonIgnore]
         string _oldcwd;
@@ -149,8 +149,9 @@ namespace IcarusNetProject
         {
             setCWD();
 
-            component.Initialize(this);
             this.components.Add(component);
+            component.Initialize(this);
+            
             Events.ComponentAdded(component);
 
             revertCWD();
