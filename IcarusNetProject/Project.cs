@@ -167,7 +167,6 @@ namespace IcarusNetProject
         {
             if (msg != null)
                 this.Events.OutputDuringBuild(msg + Environment.NewLine);
-            System.Threading.Thread.Sleep(100);
         }
 
         public void Build()
