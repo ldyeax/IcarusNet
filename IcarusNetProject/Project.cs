@@ -213,6 +213,8 @@ namespace IcarusNetProject
                     }
                 }
 
+                WriteToOutputFile();
+
                 Events.BuildFinished();
 
                 buildOutput("Build finished.");
@@ -267,7 +269,7 @@ namespace IcarusNetProject
 
             revertCWD();
 
-            AddComponent(new AssemblyEditor() { FilePath = headername });
+            AddComponent(new AssemblyEditor(new AssemblerConfig() { FileStartAddress = 0 }) { FilePath = headername });
         }
     }
 }

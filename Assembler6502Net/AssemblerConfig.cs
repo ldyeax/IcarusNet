@@ -15,7 +15,7 @@ namespace Assembler6502Net
         }
         public OperandLengthOption OperandLength = OperandLengthOption.AsWritten;
         public bool ReallocateIfOutOfBounds = false;
-        public uint FileStartAddress = 0;
+        public int FileStartAddress = 0;
     }
 
 }

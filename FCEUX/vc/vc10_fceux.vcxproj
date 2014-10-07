@@ -170,20 +170,24 @@
       <Command>SubWCRev.bat</Command>
     </PreBuildEvent>
     <ClCompile>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>.;../src/drivers/win/zlib;../src/drivers/win/directx;../src;../src/drivers/win/lua/include;userconfig;defaultconfig;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;MSVC;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINDOWS=0x0410;WINVER=0x0410;NETWORK;LSB_FIRST;_USE_32BIT_TIME_T;FCEUDEF_DEBUGGER;_USE_SHARED_MEMORY_;NOMINMAX;HAS_vsnprintf;_S9XLUA_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Rpcrt4.lib;comctl32.lib;vfw32.lib;winmm.lib;ws2_32.lib;htmlhelp.lib;../src/drivers/win/directx/dsound.lib;../src/drivers/win/directx/dxguid.lib;../src/drivers/win/directx/ddraw.lib;../src/drivers/win/directx/dinput.lib;../src/drivers/win/lua/win32/lua51.lib;LuaPerks.lib;psapi.lib;mpr.lib;%(AdditionalDependencies)</AdditionalDependencies>

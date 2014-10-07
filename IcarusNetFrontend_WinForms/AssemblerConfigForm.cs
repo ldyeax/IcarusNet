@@ -24,16 +24,16 @@ namespace IcarusNetFrontend_Winforms
         {
             get
             {
-                uint startaddr = 0;
+                int startaddr = 0;
                 try
                 {
-                    startaddr = Convert.ToUInt32(txtStartAddr.Text);
+                    startaddr = Convert.ToInt32(txtStartAddr.Text);
                 }
                 catch (FormatException)
                 {
                     try
                     {
-                        startaddr = Convert.ToUInt32(txtStartAddr.Text, 16);
+                        startaddr = Convert.ToInt32(txtStartAddr.Text, 16);
                     }
                     catch (FormatException)
                     {

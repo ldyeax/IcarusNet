@@ -222,7 +222,8 @@ namespace Assembler6502Net
                     if (RawString.EndsWith(part))
                     {
                         ValueRight = part;
-                        ValueMiddle = RawString.Substring(1, ValueMiddle.Length - 1 - ValueRight.Length);
+                        // ValueMiddle = RawString.Substring(1, ValueMiddle.Length - 1 - ValueRight.Length);
+                        ValueMiddle = RawString.Substring(1, RawString.Length - 1 - ValueRight.Length);
                         return;
                     }
                 }

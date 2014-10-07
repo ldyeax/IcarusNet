@@ -80,9 +80,14 @@ namespace Assembler6502Net
         bool didFirstPass = false;
         int currentReadingLine = -1;
 
+        void fp1()
+        {
+            firstPass(Text);
+        }
         public void FirstPass()
         {
-            execWithWrappedException(() => firstPass(Text));
+            //firstPass(Text);
+            execWithWrappedException(fp1);
         }
 
         void firstPass(string text)
@@ -197,14 +202,19 @@ namespace Assembler6502Net
             return;
         }
 
+        //this is not the right way to do this
+        public static bool noExceptionCatch = false;
+
+
         void execWithWrappedException(Action act)
         {
             
             //If debugging, let the debugger catch it
-            if (System.Diagnostics.Debugger.IsAttached)
+            //if (System.Diagnostics.Debugger.IsAttached)
+            if (noExceptionCatch)
             {
-             //   act();
-             //   return;
+                act();
+                return;
             }
 
             try

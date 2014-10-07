@@ -44,6 +44,10 @@ namespace IcarusNetProject.Components
         {
             
         }
+        public AssemblyEditor(AssemblerConfig conf)
+        {
+            this.Config = conf;
+        }
 
         #region overrides
 

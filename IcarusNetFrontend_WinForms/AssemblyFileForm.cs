@@ -26,10 +26,10 @@ namespace IcarusNetFrontend_Winforms
         {
             get
             {
-                uint startaddr = 0;
+                int startaddr = 0;
                 try
                 {
-                    startaddr = Convert.ToUInt32(txtStartAddr.Text, 16);
+                    startaddr = Convert.ToInt32(txtStartAddr.Text, 16);
                 }
                 catch (FormatException)
                 {
@@ -152,8 +152,8 @@ namespace IcarusNetFrontend_Winforms
 
             if (!doBuild)
                 return;
-
-            try
+            //want to be able to catch these with the debugger when I need to
+            Action code = () =>
             {
                 ProjectEditorComponent.Assembler.FirstPass();
                 if (!firstPassOnly)
@@ -164,7 +164,21 @@ namespace IcarusNetFrontend_Winforms
                     lblErrorOutput.Text = "";
                 });
 
-                
+            };
+
+            if (Assembler.noExceptionCatch)
+            {
+                //code();
+
+                _invoke(code);
+                _invoke(refreshLineNumberDocks);
+
+                return;
+            }
+
+            try
+            {
+                code();
             }
             catch (Assembler6502Net.SyntaxErrorException ex)
             {
