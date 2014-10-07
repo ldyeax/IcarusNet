@@ -709,5 +709,16 @@ namespace IcarusNetFrontend_Winforms
 
         #endregion
 
+        private void btnHexEditor_Click(object sender, EventArgs e)
+        {
+            if (OpenProject == null)
+            {
+                System.Diagnostics.Process.Start(Path.Combine(Application.StartupPath, "HxD", "HxD.exe"));
+                return;
+            }
+
+            System.Diagnostics.Process.Start(Path.Combine(Application.StartupPath, "HxD", "HxD.exe"), OpenProject.PathToInputFile );
+        }
+
     }
 }

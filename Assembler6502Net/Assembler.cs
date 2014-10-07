@@ -98,6 +98,7 @@ namespace Assembler6502Net
 
             ushort pc = 0;
             ushort highestPC = 0;
+            int org = 0;
 
             //First pass resolves variables and sets labels 
             for (currentReadingLine = 0; currentReadingLine < Lines.Length; ++currentReadingLine)
@@ -106,6 +107,7 @@ namespace Assembler6502Net
                 Line line = Lines[currentReadingLine];
 
                 line.PC = pc;
+                line.Org = org;
 
                 if (line.Label != null)
                 {
@@ -142,7 +144,9 @@ namespace Assembler6502Net
                     line.DetermineAddressingMethod(Config);
 
                     pc++;
+                    org++;
                     pc += Assembly.AddressingMethodLength[line.AddressingMethod.Value];
+                    org += Assembly.AddressingMethodLength[line.AddressingMethod.Value];
 
                     if (pc > highestPC)
                         highestPC = pc;
@@ -156,6 +160,15 @@ namespace Assembler6502Net
                 else if (line.Directive != null)
                 {
                     pc += (ushort)line.Directive.LengthInBytes;
+                    org += line.Directive.LengthInBytes;
+                    if (line.Directive.Type == DirectiveType.org)
+                    {
+                        line.Directive.ParseValue();
+                        //Console.WriteLine(line.Directive.RawArgumentWithoutQuotes);
+                        //Console.WriteLine(line.Directive.ComputedValue.Result);
+                        //Console.WriteLine("^^^");
+                        org = line.Directive.ComputedValue.GetNumeral();
+                    }
                 }
 
             }
@@ -178,6 +191,7 @@ namespace Assembler6502Net
         void secondPass(bool facade = false)
         {
             //Second pass resolves labels and generates machine code
+
             for (currentReadingLine = 0; currentReadingLine < Lines.Length; ++currentReadingLine)
             {
                 Line line = Lines[currentReadingLine];
@@ -193,7 +207,7 @@ namespace Assembler6502Net
 
                         for (int j = 0; j < line.ComputedBytes.Count; ++j)
                         {
-                            this.Bytes[pc + Config.FileStartAddress + j] = line.ComputedBytes[j];
+                            this.Bytes[line.Org + Config.FileStartAddress + j] = line.ComputedBytes[j];
                         }
                     }
                 }

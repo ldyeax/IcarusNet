@@ -1,4 +1,6 @@
-﻿namespace IcarusNetFrontend_Winforms
+﻿
+
+namespace IcarusNetFrontend_Winforms
 {
     partial class AssemblyFileForm
     {

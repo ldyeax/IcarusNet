@@ -49,6 +49,7 @@ namespace Assembler6502Net
         public RValue RValue = null;
         public KeyValuePair<string, string>? VariableAssignment = null;
         public ushort PC;
+        public int Org;
 
         public List<byte> ComputedBytes = null;
 

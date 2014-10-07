@@ -51,6 +51,7 @@
             this.toolstrip_help = new System.Windows.Forms.MenuItem();
             this.toolstrip_about = new System.Windows.Forms.MenuItem();
             this.txtOutput = new System.Windows.Forms.TextBox();
+            this.btnHexEditor = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbProjectControls
@@ -58,9 +59,9 @@
             this.lbProjectControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbProjectControls.FormattingEnabled = true;
-            this.lbProjectControls.Location = new System.Drawing.Point(971, 7);
+            this.lbProjectControls.Location = new System.Drawing.Point(971, 33);
             this.lbProjectControls.Name = "lbProjectControls";
-            this.lbProjectControls.Size = new System.Drawing.Size(126, 576);
+            this.lbProjectControls.Size = new System.Drawing.Size(126, 550);
             this.lbProjectControls.TabIndex = 16;
             this.lbProjectControls.Tag = "NeedOpenProject";
             this.lbProjectControls.SelectedIndexChanged += new System.EventHandler(this.lbProjectControls_SelectedIndexChanged);
@@ -237,11 +238,25 @@
             this.txtOutput.TabIndex = 21;
             this.txtOutput.TextChanged += new System.EventHandler(this.txtOutput_TextChanged);
             // 
+            // btnHexEditor
+            // 
+            this.btnHexEditor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHexEditor.Location = new System.Drawing.Point(971, 7);
+            this.btnHexEditor.Name = "btnHexEditor";
+            this.btnHexEditor.Size = new System.Drawing.Size(126, 23);
+            this.btnHexEditor.TabIndex = 22;
+            this.btnHexEditor.Tag = "NeedOpenProject";
+            this.btnHexEditor.Text = "Hex Editor (HxD)";
+            this.btnHexEditor.UseVisualStyleBackColor = true;
+            this.btnHexEditor.Click += new System.EventHandler(this.btnHexEditor_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1109, 610);
+            this.Controls.Add(this.btnHexEditor);
             this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.pnlComponentZoo);
             this.Controls.Add(this.btnDown);
@@ -283,6 +298,7 @@
         private System.Windows.Forms.MenuItem toolstrip_generateHeaderFooterAssemblySource;
         private System.Windows.Forms.MenuItem toolstrip_addIPS;
         private System.Windows.Forms.MenuItem toolstrip_addExistingAssemblySource;
+        private System.Windows.Forms.Button btnHexEditor;
     }
 }
 

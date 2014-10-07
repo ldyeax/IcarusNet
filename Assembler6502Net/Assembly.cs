@@ -90,7 +90,6 @@ namespace Assembler6502Net
                 ComputedValue.MakeNegative = true;
             }
 
-
             return ComputedValue;
         }
 

@@ -9,7 +9,8 @@ namespace Assembler6502Net
     {
         @byte,
         word,
-        @string
+        @string,
+        org
     }
 
     public class Directive
@@ -39,6 +40,10 @@ namespace Assembler6502Net
                 case DirectiveType.@string:
                     this.LengthInBytes = unquotedArgument.Length;
                     this.Bytes = Encoding.ASCII.GetBytes(unquotedArgument);
+                    break;
+                case DirectiveType.org:
+                    this.LengthInBytes = 0;
+                    this.Bytes = new byte[0];
                     break;
             }
         }

@@ -119,6 +119,17 @@ namespace IcarusNetProject
             }
         }
         [JsonIgnore]
+        public string PathToInputFile
+        {
+            get
+            {
+                setCWD();
+                string ret = new FileInfo(Settings.InputFile).FullName;
+                revertCWD();
+                return ret;
+            }
+        }
+        [JsonIgnore]
         public AssemblerGroup AssemblerGroup = new AssemblerGroup();
         /// <summary>
         /// To be written to by Components during Build

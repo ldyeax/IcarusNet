@@ -264,7 +264,7 @@ namespace IcarusNetFrontend_Winforms
 
                 ret.Text = 
                     linenostr + " " + 
-                    (line.PC + this.ProjectEditorComponent.Assembler.Config.FileStartAddress).ToString("X5") +
+                    (line.Org + Config.FileStartAddress).ToString("X5") +
                     ":" +
                     line.PC.ToString("X4");
                 ret.ForeColor = Color.Blue;
