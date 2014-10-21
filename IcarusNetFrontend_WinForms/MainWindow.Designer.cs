@@ -52,6 +52,7 @@
             this.toolstrip_about = new System.Windows.Forms.MenuItem();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.btnHexEditor = new System.Windows.Forms.Button();
+            this.cbComponentEnabled = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lbProjectControls
@@ -61,13 +62,14 @@
             this.lbProjectControls.FormattingEnabled = true;
             this.lbProjectControls.Location = new System.Drawing.Point(971, 33);
             this.lbProjectControls.Name = "lbProjectControls";
-            this.lbProjectControls.Size = new System.Drawing.Size(126, 550);
+            this.lbProjectControls.Size = new System.Drawing.Size(126, 524);
             this.lbProjectControls.TabIndex = 16;
             this.lbProjectControls.Tag = "NeedOpenProject";
             this.lbProjectControls.SelectedIndexChanged += new System.EventHandler(this.lbProjectControls_SelectedIndexChanged);
             this.lbProjectControls.DoubleClick += new System.EventHandler(this.lbProjectControls_DoubleClick);
             this.lbProjectControls.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbProjectControls_KeyDown);
             this.lbProjectControls.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbProjectControls_MouseDown);
+            this.lbProjectControls.Validated += new System.EventHandler(this.lbProjectControls_Validated);
             // 
             // btnUp
             // 
@@ -251,11 +253,23 @@
             this.btnHexEditor.UseVisualStyleBackColor = true;
             this.btnHexEditor.Click += new System.EventHandler(this.btnHexEditor_Click);
             // 
+            // cbComponentEnabled
+            // 
+            this.cbComponentEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbComponentEnabled.Location = new System.Drawing.Point(971, 561);
+            this.cbComponentEnabled.Name = "cbComponentEnabled";
+            this.cbComponentEnabled.Size = new System.Drawing.Size(126, 17);
+            this.cbComponentEnabled.TabIndex = 23;
+            this.cbComponentEnabled.Text = "Component Enabled";
+            this.cbComponentEnabled.UseVisualStyleBackColor = true;
+            this.cbComponentEnabled.Click += new System.EventHandler(this.cbComponentEnabled_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1109, 610);
+            this.Controls.Add(this.cbComponentEnabled);
             this.Controls.Add(this.btnHexEditor);
             this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.pnlComponentZoo);
@@ -299,6 +313,7 @@
         private System.Windows.Forms.MenuItem toolstrip_addIPS;
         private System.Windows.Forms.MenuItem toolstrip_addExistingAssemblySource;
         private System.Windows.Forms.Button btnHexEditor;
+        private System.Windows.Forms.CheckBox cbComponentEnabled;
     }
 }
 

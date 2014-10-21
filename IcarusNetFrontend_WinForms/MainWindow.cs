@@ -430,6 +430,15 @@ namespace IcarusNetFrontend_Winforms
             return (Form)nameToComponentForm[lbProjectControls.SelectedItem.ToString()];
         }
 
+
+        IcarusNetProject.Components.Component GetSelectedComponent()
+        {
+            if (OpenProject == null || lbProjectControls.SelectedItem == null)
+                return null;
+            return ((IProjectComponentForm)getSelectedComponentFormInListBox()).GetComponent();
+        }
+
+
         void swapControlBuildOrders(IcarusNetProject.Components.Component ctrlToLower, IcarusNetProject.Components.Component ctrlToIncrease)
         {
             if (ctrlToLower.BuildOrder == ctrlToIncrease.BuildOrder)
@@ -526,12 +535,13 @@ namespace IcarusNetFrontend_Winforms
                 return;
 
             var form = getSelectedComponentFormInListBox();
-            if (form != null)
-            {
-                if (pnlComponentZoo.Contains(form))
-                    form.BringToFront();
-            }
+            if (form == null)
+                return;
 
+            if (pnlComponentZoo.Contains(form))
+                form.BringToFront();
+
+            cbComponentEnabled.Checked = ((IProjectComponentForm)form).GetComponent().Enabled;
         }
 
         #endregion
@@ -718,6 +728,29 @@ namespace IcarusNetFrontend_Winforms
             }
 
             System.Diagnostics.Process.Start(Path.Combine(Application.StartupPath, "HxD", "HxD.exe"), OpenProject.PathToInputFile );
+        }
+
+        private void lbProjectControls_Validated(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbComponentEnabled_Click(object sender, EventArgs e)
+        {
+            if (OpenProject == null)
+            {
+                MessageBox.Show(this, "No open project");
+                return;
+            }
+            var c = GetSelectedComponent();
+
+            if (c == null)
+            {
+                MessageBox.Show(this, "Problem setting enabledness of selected component if any");
+                return;
+            }
+
+            c.Enabled = cbComponentEnabled.Checked;
         }
 
     }

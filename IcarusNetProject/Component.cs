@@ -18,6 +18,7 @@ namespace IcarusNetProject.Components
 
     public abstract class Component : IComparable<Component>
     {
+        public bool Enabled = true;
         public int X = 0;
         public int Y = 0;
         public int Width = 600;

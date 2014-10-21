@@ -196,6 +196,9 @@ namespace IcarusNetProject
                 {
                     lock (c)
                     {
+                        if (!c.Enabled)
+                            continue;
+
                         buildOutput("Pre-build <" + c.GetType().Name + "> " + c.Name);
 
                         buildOutput(c.PreBuild());
@@ -214,6 +217,9 @@ namespace IcarusNetProject
                 {
                     lock (c)
                     {
+                        if (!c.Enabled)
+                            continue;
+
                         buildOutput("Build <" + c.GetType().Name + "> " + c.Name);
 
                         buildOutput(c.Build(this));
