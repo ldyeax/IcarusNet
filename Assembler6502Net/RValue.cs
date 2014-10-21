@@ -81,12 +81,14 @@ namespace Assembler6502Net
 
             if (nval > ushort.MaxValue)
             {
-                throw new SyntaxErrorException("Value out of range");
+                throw new SyntaxErrorException("Value out of range in setValue(int nval): " + nval);
             }
 
             ComputedValue.Result = (ushort)nval;
             return;
         }
+
+        
 
         /// <summary>
         /// only for instructions that use labels
@@ -104,10 +106,10 @@ namespace Assembler6502Net
             {
                 throw new SyntaxErrorException("Invalid label or literal", ex);
             }
-
+            int fnval = nval;
             if (AddressingMethod == Assembly.AddressingMethod.relative)
-                nval -= (short)pc;
-
+                nval -= (ushort)pc;
+            int onval = nval;
             if (nval < 0)
             {
                 nval = Assembly.TwosComplement8bit(nval);
@@ -115,7 +117,7 @@ namespace Assembler6502Net
 
             if (nval > ushort.MaxValue)
             {
-                throw new SyntaxErrorException("Value out of range");
+                throw new SyntaxErrorException("Value out of range: " + nval + ", it first was " + fnval + ", after possible relative subtraction is was " + onval + ", then if so it was complemented to " + nval);
             }
 
             setValue(nval);

@@ -242,8 +242,7 @@
             // 
             // btnHexEditor
             // 
-            this.btnHexEditor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHexEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnHexEditor.Location = new System.Drawing.Point(971, 7);
             this.btnHexEditor.Name = "btnHexEditor";
             this.btnHexEditor.Size = new System.Drawing.Size(126, 23);
