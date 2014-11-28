@@ -7,6 +7,8 @@ Create a project with File -> New Project. Once your project is opened, you can 
 
 Planned: Interprocess communication with the included FCEUX to allow integrated debugging with source files
 
+[Build to use without compiling](https://github.com/ldyeax/IcarusNet/blob/master/build.zip)
+
 ldyeax@gmail.com
 
 CC BY-SA
