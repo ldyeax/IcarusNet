@@ -241,7 +241,8 @@ namespace Assembler6502Net
                 {
                     var s = (SyntaxErrorException)ex;
                     s.Line = currentReadingLine;
-                    Lines[s.Line].ThrownException = s;
+                    if (Lines[s.Line] != null)
+                        Lines[s.Line].ThrownException = s;
                     throw s;
                 }
                 else

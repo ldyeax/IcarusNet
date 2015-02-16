@@ -108,7 +108,7 @@ namespace Assembler6502Net
             }
             int fnval = nval;
             if (AddressingMethod == Assembly.AddressingMethod.relative)
-                nval -= (ushort)pc;
+                nval -= ((ushort)pc + 2);
             int onval = nval;
             if (nval < 0)
             {

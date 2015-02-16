@@ -31,7 +31,7 @@ namespace IcarusNetFrontend_Winforms
                 {
                     startaddr = Convert.ToInt32(txtStartAddr.Text, 16);
                 }
-                catch (FormatException)
+                catch (Exception)
                 {
                     startaddr = 0;
                     txtStartAddr.BackColor = Color.Red;
