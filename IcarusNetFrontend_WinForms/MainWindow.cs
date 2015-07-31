@@ -261,6 +261,15 @@ namespace IcarusNetFrontend_Winforms
         
         #endregion
 
+        void recursivelyAddMouseDown(Control control, MouseEventHandler handler)
+        {
+            control.MouseDown += handler;
+            foreach (Control subControl in control.Controls)
+            {
+                recursivelyAddMouseDown(subControl, handler);
+            }
+        }
+
         void addComponentForm(IcarusNetProject.Components.Component component, Form componentForm)
         {
             componentForm.TopLevel = false;
@@ -287,7 +296,12 @@ namespace IcarusNetFrontend_Winforms
             componentForm.FormClosed += componentForm_FormClosed;
             componentForm.FormClosing += componentForm_FormClosing;
             componentForm.SizeChanged += componentForm_SizeChanged;
-            componentForm.MouseDown += componentForm_MouseDown;
+
+            recursivelyAddMouseDown(
+                componentForm, 
+                (object sender, MouseEventArgs args) => { bringFormToFrontAndSelectInListbox(componentForm); }
+            );
+
             componentForm.GotFocus += componentForm_GotFocus;
             componentForm.VisibleChanged += componentForm_VisibleChanged;
 
@@ -309,12 +323,27 @@ namespace IcarusNetFrontend_Winforms
 
         void componentForm_GotFocus(object sender, EventArgs e)
         {
-            ((Form)sender).BringToFront();
+            bringFormToFrontAndSelectInListbox(sender);
         }
 
         void componentForm_MouseDown(object sender, MouseEventArgs e)
         {
-            ((Form)sender).BringToFront();
+            bringFormToFrontAndSelectInListbox(sender);
+        }
+
+
+        void bringFormToFrontAndSelectInListbox(object sender)
+        {
+            Form frmSender = (Form)sender;
+            frmSender.BringToFront();
+            foreach (var itm in lbProjectControls.Items)
+            {
+                if ((string)itm == frmSender.Text)
+                {
+                    lbProjectControls.SelectedItem = itm;
+                    break;
+                }
+            }
         }
 
         #endregion
@@ -751,6 +780,11 @@ namespace IcarusNetFrontend_Winforms
             }
 
             c.Enabled = cbComponentEnabled.Checked;
+        }
+
+        private void cbComponentEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
     }

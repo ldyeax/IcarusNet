@@ -261,6 +261,7 @@
             this.cbComponentEnabled.TabIndex = 23;
             this.cbComponentEnabled.Text = "Component Enabled";
             this.cbComponentEnabled.UseVisualStyleBackColor = true;
+            this.cbComponentEnabled.CheckedChanged += new System.EventHandler(this.cbComponentEnabled_CheckedChanged);
             this.cbComponentEnabled.Click += new System.EventHandler(this.cbComponentEnabled_Click);
             // 
             // MainWindow
