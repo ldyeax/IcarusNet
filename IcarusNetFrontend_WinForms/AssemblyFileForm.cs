@@ -291,8 +291,6 @@ namespace IcarusNetFrontend_Winforms
                 try
                 {
 
-                    System.Threading.Thread.Sleep(100);
-
 
                     if (ProjectEditorComponent == null || ProjectEditorComponent.Project == null || ProjectEditorComponent.Project.Building)
                     {
@@ -342,7 +340,14 @@ namespace IcarusNetFrontend_Winforms
                     //return;
                     //_invoke(() => { this.Text = ex.Message; });
                     //MessageBox.Show(ex.Message);
-                };
+
+                    
+                } finally
+                {
+
+                    System.Threading.Thread.Sleep(500);
+
+                }
             }
         }
 
